@@ -8,13 +8,13 @@ class ParticipantViewModel extends ChangeNotifier {
   final TextEditingController bibController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  List<Participant> get participants => _participantService.participants;
+  // List<Participant> get participants => _participantService.participants;
 
   void addParticipant() {
     if (bibController.text.isNotEmpty && nameController.text.isNotEmpty) {
       _participantService.addParticipant(
         Participant(
-          bib: bibController.text,
+          bib: int.parse(bibController.text),
           name: nameController.text,
           timer: Duration.zero,
           status: false,

@@ -1,5 +1,5 @@
 class Participant {
-  final String bib;
+  final int bib;
   final String name;
   final Duration timer;
   final bool status;

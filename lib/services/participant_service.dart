@@ -1,49 +1,26 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/participant_model.dart';
 
 class ParticipantService {
-  final List<Participant> _participants = [
-    Participant(
-      bib: '001',
-      name: 'John Doe',
-      timer: Duration.zero,
-      status: false,
-    ),
-    Participant(
-      bib: '002',
-      name: 'Jane Smith',
-      timer: Duration.zero,
-      status: false,
-    ),
-    Participant(
-      bib: '003',
-      name: 'Alice Johnson',
-      timer: Duration.zero,
-      status: false,
-    ),
-  ];
+  final CollectionReference _participants = FirebaseFirestore.instance
+      .collection('participants');
 
-  List<Participant> get participants => _participants;
-
-  void addParticipant(Participant participant) {
-    _participants.add(participant);
+  Future<void> addParticipant(Participant participant) async {
+    await _participants.add(participant.toJson());
   }
 
-  void removeParticipant(int index) {
-    if (index >= 0 && index < _participants.length) {
-      _participants.removeAt(index);
+  Future<void> removeParticipant(int bib) async {
+    await _participants.where('bib', isEqualTo: bib).get().then((snapshot) {
+      for (var doc in snapshot.docs) {
+        doc.reference.delete();
+      }
+    });
+  }
+
+  Future<void> removeAllParticipants() async {
+    final participantsSnapshot = await _participants.get();
+    for (var doc in participantsSnapshot.docs) {
+      await doc.reference.delete();
     }
-  }
-
-  void removeAllParticipants() {
-    _participants.clear();
-  }
-
-  // For future implementation: store participants in local storage or remote database
-  Future<void> saveParticipants() async {
-    // Implementation for saving participants
-  }
-
-  Future<void> loadParticipants() async {
-    // Implementation for loading participants
   }
 }
