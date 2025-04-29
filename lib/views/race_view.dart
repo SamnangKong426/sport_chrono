@@ -80,42 +80,44 @@ class RaceView extends StatelessWidget {
             // wire your search bar into the VM
             BIBSearchBar(onChanged: vm.filterByBib),
             const SizedBox(height: 20),
+
+
             // status guide
             Row(
               children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.circle,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      'Untrack',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ],
+              Row(
+                children: [
+                Icon(
+                  Icons.circle,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 16,
                 ),
-                const SizedBox(width: 20.0),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.circle,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8.0),
-                    Text(
-                      'Track',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    ),
-                  ],
+                const SizedBox(width: 8.0),
+                Text(
+                  'Untrack',
+                  style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
+                ],
+              ),
+              const SizedBox(width: 20.0),
+              Row(
+                children: [
+                Icon(
+                  Icons.circle,
+                  color: Theme.of(context).colorScheme.secondary,
+                  size: 16,
+                ),
+                const SizedBox(width: 8.0),
+                Text(
+                  'Track',
+                  style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                ],
+              ),
               ],
             ),
             const SizedBox(height: 20),
