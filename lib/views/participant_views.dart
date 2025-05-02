@@ -28,26 +28,30 @@ class _ParticipantViewState extends State<ParticipantViews> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+            const Text(
                 'Triathlon',
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
                 ),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Participants',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
                 ),
               ),
               const Text(
                 'add participants to start the race',
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 14,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
                 ),
               ),
               const SizedBox(height: 16),
@@ -75,12 +79,20 @@ class _ParticipantViewState extends State<ParticipantViews> {
           flex: 1,
           child: TextField(
             controller: _viewModel.bibController,
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+            ),
             decoration: const InputDecoration(
               hintText: 'BIB #',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
             ),
             keyboardType: TextInputType.number,
           ),
@@ -90,12 +102,20 @@ class _ParticipantViewState extends State<ParticipantViews> {
           flex: 2,
           child: TextField(
             controller: _viewModel.nameController,
+            style: const TextStyle(
+              fontSize: 18,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.bold,
+            ),
             decoration: const InputDecoration(
               hintText: 'Participant Name',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
             ),
           ),
         ),
@@ -106,16 +126,15 @@ class _ParticipantViewState extends State<ParticipantViews> {
               _viewModel.addParticipant();
             });
           },
-          child: Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.grey),
-            ),
-            child: const Icon(Icons.add),
-          ),
+        child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _viewModel.addParticipant();
+                      });
+                    },
+                    mini: true,
+                    child: const Icon(Icons.add),
+                  ),
         ),
       ],
     );
@@ -126,24 +145,46 @@ class _ParticipantViewState extends State<ParticipantViews> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Row(
-          children: [
-            SizedBox(width: 16),
-            Text('BIB', style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(width: 36),
-            Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
-          ],
+        children: [
+                    SizedBox(width: 16),
+                    Text(
+                      'BIB',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 36),
+                    Text(
+                      'Name',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
         ),
-        TextButton(
-          onPressed: () {
-            setState(() {
-              _viewModel.deleteAll();
-            });
-          },
-          child: const Text(
-            'Delete All',
-            style: TextStyle(color: Colors.red),
-          ),
-        ),
+      TextButton(
+                onPressed: () {
+                  setState(() {
+                    _viewModel.deleteAll();
+                  });
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  
+                  side: const BorderSide(color: Color(0xFFD0312D), width: 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Text(
+                  'Delete All',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
       ],
     );
   }

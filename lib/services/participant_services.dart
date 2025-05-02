@@ -2,11 +2,7 @@ import '../models/participant_models.dart';
 
 class ParticipantService {
   List<Participant> _participants = [
-    Participant(bib: '01', name: 'Samnang'),
-    Participant(bib: '10', name: 'Yaya'),
-    Participant(bib: '168', name: 'Tong Tong'),
-    Participant(bib: '111', name: 'Samnang'),
-    Participant(bib: '221', name: 'Samnang'),
+
   ];
 
   List<Participant> get participants => _participants;
