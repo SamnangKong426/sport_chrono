@@ -11,8 +11,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  ParticipantService participantService = ParticipantService();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +21,7 @@ class MyApp extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                participantService.getParticipants().then((value) {
+                ParticipantService.getParticipants().then((value) {
                   print(value);
                 });
               },
@@ -31,26 +29,21 @@ class MyApp extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                participantService.addParticipant(
-                  Participant(
-                    bib: 1,
-                    name: 'John Doe',
-                    timer: Duration.zero,
-                    status: false,
-                  ),
+                ParticipantService.addParticipant(
+                  Participant(bib: 1, name: 'John Doe', status: true),
                 );
               },
               child: Text('Add Participant'),
             ),
             TextButton(
               onPressed: () {
-                participantService.removeParticipant(1);
+                ParticipantService.removeParticipant(1);
               },
               child: Text('Remove Participant'),
             ),
             TextButton(
               onPressed: () {
-                participantService.removeAllParticipants();
+                ParticipantService.removeAllParticipants();
               },
               child: Text('Remove All Participants'),
             ),

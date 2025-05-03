@@ -14,6 +14,8 @@ class RaceViewModel extends ChangeNotifier {
   List<Participant> get participants => _currentRace.participants;
   String get selectedSport => _currentRace.sportType;
 
+  // Service
+  
   // global race timer
   Timer? _timer;
   Duration elapsed = Duration.zero;
@@ -25,12 +27,6 @@ class RaceViewModel extends ChangeNotifier {
 
   void _loadParticipants() {
     // TODO: replace with real data source
-    _allParticipants.addAll([
-      Participant(bib: 1, name: 'Alice', timer: Duration.zero, status: false),
-      Participant(bib: 2, name: 'Bob', timer: Duration.zero, status: true),
-      Participant(bib: 3, name: 'Carl', timer: Duration.zero, status: false),
-      Participant(bib: 4, name: 'Diana', timer: Duration.zero, status: true),
-    ]);
     // initialize Race with loaded participants
     _currentRace = Race(
       sportType: _currentRace.sportType,
@@ -80,7 +76,9 @@ class RaceViewModel extends ChangeNotifier {
     final filtered =
         query.isEmpty
             ? List<Participant>.from(_allParticipants)
-            : _allParticipants.where((p) => p.bib.toString().contains(query)).toList();
+            : _allParticipants
+                .where((p) => p.bib.toString().contains(query))
+                .toList();
 
     _currentRace = Race(
       sportType: _currentRace.sportType,
