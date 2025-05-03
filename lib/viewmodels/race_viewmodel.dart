@@ -2,20 +2,21 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/models/race_model.dart';
+import 'package:sport_chrono/services/participant_service.dart';
 
 class RaceViewModel extends ChangeNotifier {
   // use Race model to hold sport type + participants
   Race _currentRace = Race(sportType: 'Swimming', participants: []);
 
   // backing store for all participants (unfiltered)
-  final List<Participant> _allParticipants = [];
+  List<Participant> _allParticipants = [];
 
   // expose getters that read from the Race model
   List<Participant> get participants => _currentRace.participants;
   String get selectedSport => _currentRace.sportType;
 
   // Service
-  
+
   // global race timer
   Timer? _timer;
   Duration elapsed = Duration.zero;
@@ -25,8 +26,8 @@ class RaceViewModel extends ChangeNotifier {
     _loadParticipants();
   }
 
-  void _loadParticipants() {
-    // TODO: replace with real data source
+  void _loadParticipants() async {
+    _allParticipants = await ParticipantService.getParticipants();
     // initialize Race with loaded participants
     _currentRace = Race(
       sportType: _currentRace.sportType,

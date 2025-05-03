@@ -61,78 +61,107 @@ class ParticipantTable extends StatelessWidget {
       ],
     );
 
-    return Table(
-      children: [
-        tableRow,
-        for (var participant in participants) ...[
-          TableRow(
-            decoration: BoxDecoration(
-              color:
-                  participant.status
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
+    return Flexible(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height,
+        ),
+        child: SingleChildScrollView(
+          child: Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: const {
+              0: FixedColumnWidth(60),
+              1: FlexColumnWidth(),
+              2: FixedColumnWidth(80),
+              3: FixedColumnWidth(80),
+            },
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  participant.bib.toString(),
-                  style: TextStyle(
+              tableRow,
+              const TableRow(
+                children: [
+                  SizedBox(height: 16),
+                  SizedBox(),
+                  SizedBox(),
+                  SizedBox(),
+                ],
+              ),
+              for (var participant in participants) ...[
+                TableRow(
+                  decoration: BoxDecoration(
                     color:
                         participant.status
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        participant.bib.toString(),
+                        style: TextStyle(
+                          color:
+                              participant.status
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        participant.name,
+                        style: TextStyle(
+                          color:
+                              participant.status
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        participant.swimmingTimer.toString().split('.').first,
+                        style: TextStyle(
+                          color:
+                              participant.status
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        participant.status ? 'Track' : 'Untrack',
+                        style: TextStyle(
+                          color:
+                              participant.status
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).colorScheme.primary,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  participant.name,
-                  style: TextStyle(
-                    color:
-                        participant.status
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
-                  ),
+                const TableRow(
+                  children: [
+                    SizedBox(height: 8),
+                    SizedBox(),
+                    SizedBox(),
+                    SizedBox(),
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  participant.timer.toString().split('.').first,
-                  style: TextStyle(
-                    color:
-                        participant.status
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  participant.status ? 'Track' : 'Untrack',
-                  style: TextStyle(
-                    color:
-                        participant.status
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+              ],
             ],
           ),
-          const TableRow(
-            children: [SizedBox(height: 8), SizedBox(), SizedBox(), SizedBox()],
-          ),
-        ],
-      ],
+        ),
+      ),
     );
   }
 }
