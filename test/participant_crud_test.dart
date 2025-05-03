@@ -7,9 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MaterialApp(
-    home: MyApp(),
-  ));
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,6 +21,14 @@ class MyApp extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            TextButton(
+              onPressed: () {
+                participantService.getParticipants().then((value) {
+                  print(value);
+                });
+              },
+              child: Text('Get Participants'),
+            ),
             TextButton(
               onPressed: () {
                 participantService.addParticipant(
