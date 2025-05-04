@@ -1,4 +1,4 @@
-import '../models/participant_model.dart';
+import 'package:sport_chrono/models/participant_model.dart';
 
 class ParticipantService {
   final List<Participant> _participants = [
