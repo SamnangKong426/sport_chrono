@@ -1,9 +1,7 @@
-import '../models/participant_models.dart';
+import 'package:sport_chrono/models/participant_model.dart';
 
 class ParticipantService {
-  List<Participant> _participants = [
-
-  ];
+  List<Participant> _participants = [];
 
   List<Participant> get participants => _participants;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/participant_models.dart';
+import '../models/participant_model.dart';
 
 class ParticipantListItem extends StatelessWidget {
   final Participant participant;

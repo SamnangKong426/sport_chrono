@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import '../viewmodels/particpant_viewmodels.dart';
-import '../models/participant_models.dart';
-import 'widgets/participant_list_item_widgets_views.dart';
+import '../viewmodels/particpant_viewmodel.dart';
+import '../widgets/participant_list_item_widgets_views.dart';
 // import 'widgets/participant_list_item.dart';
-class ParticipantViews extends StatefulWidget {
-  const ParticipantViews({Key? key}) : super(key: key);
+class ParticipantView extends StatefulWidget {
+  const ParticipantView({Key? key}) : super(key: key);
 
   @override
-  State<ParticipantViews> createState() => _ParticipantViewState();
+  State<ParticipantView> createState() => _ParticipantViewtate();
 }
 
-class _ParticipantViewState extends State<ParticipantViews> {
+class _ParticipantViewtate extends State<ParticipantView> {
   final ParticipantViewModel _viewModel = ParticipantViewModel();
 
   @override

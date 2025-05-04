@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 // import '../models/participant.dart';
-import '../models/participant_models.dart';
-import '../services/participant_services.dart';
+import '../models/participant_model.dart';
+import '../services/participant_service.dart';
+
 class ParticipantViewModel extends ChangeNotifier {
   final ParticipantService _participantService = ParticipantService();
   final TextEditingController bibController = TextEditingController();
