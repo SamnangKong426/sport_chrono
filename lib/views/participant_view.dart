@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../viewmodels/particpant_viewmodel.dart';
-import '../widgets/participant_list_item_widgets_views.dart';
+import 'package:provider/provider.dart';
+import 'package:sport_chrono/models/participant_model.dart';
+import 'package:sport_chrono/viewmodels/participant_viewmodel.dart';
+import 'package:sport_chrono/widgets/participant_list_item_widgets_views.dart';
 
-// import 'widgets/participant_list_item.dart';
 class ParticipantView extends StatefulWidget {
   const ParticipantView({Key? key}) : super(key: key);
 
@@ -11,7 +12,13 @@ class ParticipantView extends StatefulWidget {
 }
 
 class _ParticipantViewtate extends State<ParticipantView> {
-  final ParticipantViewModel _viewModel = ParticipantViewModel();
+  late final ParticipantViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = Provider.of<ParticipantViewModel>(context, listen: false);
+  }
 
   @override
   void dispose() {
@@ -165,14 +172,12 @@ class _ParticipantViewtate extends State<ParticipantView> {
           ],
         ),
         TextButton(
-          onPressed: () {
-            setState(() {
-              _viewModel.deleteAll();
-            });
+          onPressed: () async {
+            await _viewModel.deleteAll(); // wait until the DB is cleared
+            setState(() {}); // then rebuild & refire the FutureBuilder
           },
           style: TextButton.styleFrom(
             backgroundColor: Colors.red,
-
             side: const BorderSide(color: Color(0xFFD0312D), width: 1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
@@ -188,18 +193,31 @@ class _ParticipantViewtate extends State<ParticipantView> {
   }
 
   Widget _buildParticipantList() {
-    return ListView.builder(
-      itemCount: _viewModel.participants.length,
-      itemBuilder: (context, index) {
-        final participant = _viewModel.participants[index];
-        return ParticipantListItem(
-          participant: participant,
-          onDelete: () {
-            setState(() {
-              _viewModel.deleteParticipant(index);
-            });
-          },
-        );
+    return FutureBuilder<List<Participant>>(
+      future: _viewModel.getParticipants(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No participants found.'));
+        } else {
+          final participants = snapshot.data!;
+          return ListView.builder(
+            itemCount: participants.length,
+            itemBuilder: (context, index) {
+              final participant = participants[index];
+              return ParticipantListItem(
+                participant: participant,
+                onDelete: () async {
+                  await _viewModel.deleteParticipant(participant.bib);
+                  setState(() {}); // Refresh the list after deletion
+                },
+              );
+            },
+          );
+        }
       },
     );
   }

@@ -6,10 +6,10 @@ class ParticipantListItem extends StatelessWidget {
   final VoidCallback onDelete;
 
   const ParticipantListItem({
-    Key? key,
+    super.key,
     required this.participant,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ParticipantListItem extends StatelessWidget {
         leading: SizedBox(
           width: 30,
           child: Text(
-            participant.bib,
+            participant.bib.toString(),
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),

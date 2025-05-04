@@ -1,49 +1,33 @@
 import 'package:sport_chrono/models/participant_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ParticipantService {
-  final List<Participant> _participants = [
-    Participant(
-      bib: '001',
-      name: 'John Doe',
-      timer: Duration.zero,
-      status: false,
-    ),
-    Participant(
-      bib: '002',
-      name: 'Jane Smith',
-      timer: Duration.zero,
-      status: false,
-    ),
-    Participant(
-      bib: '003',
-      name: 'Alice Johnson',
-      timer: Duration.zero,
-      status: false,
-    ),
-  ];
+  // static Firestore collection
+  static final CollectionReference _participants = FirebaseFirestore.instance
+      .collection('participants');
 
-  List<Participant> get participants => _participants;
-
-  void addParticipant(Participant participant) {
-    _participants.add(participant);
+  static Future<List<Participant>> getParticipants() async {
+    final snapshot = await _participants.get();
+    return snapshot.docs
+        .map((doc) => Participant.fromJson(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
-  void removeParticipant(int index) {
-    if (index >= 0 && index < _participants.length) {
-      _participants.removeAt(index);
+  static Future<void> addParticipant(Participant participant) async {
+    await _participants.add(participant.toJson());
+  }
+
+  static Future<void> removeParticipant(int bib) async {
+    final snapshot = await _participants.where('bib', isEqualTo: bib).get();
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
     }
   }
 
-  void removeAllParticipants() {
-    _participants.clear();
-  }
-
-  // For future implementation: store participants in local storage or remote database
-  Future<void> saveParticipants() async {
-    // Implementation for saving participants
-  }
-
-  Future<void> loadParticipants() async {
-    // Implementation for loading participants
+  static Future<void> removeAllParticipants() async {
+    final snapshot = await _participants.get();
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
   }
 }

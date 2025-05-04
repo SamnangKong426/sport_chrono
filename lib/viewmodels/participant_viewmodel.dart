@@ -3,19 +3,15 @@ import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/services/participant_service.dart';
 
 class ParticipantViewModel extends ChangeNotifier {
-  final ParticipantService _participantService = ParticipantService();
   final TextEditingController bibController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  List<Participant> get participants => _participantService.participants;
-
   void addParticipant() {
     if (bibController.text.isNotEmpty && nameController.text.isNotEmpty) {
-      _participantService.addParticipant(
+      ParticipantService.addParticipant(
         Participant(
-          bib: bibController.text,
+          bib: int.parse(bibController.text),
           name: nameController.text,
-          timer: Duration.zero,
           status: false,
         ),
       );
@@ -25,13 +21,20 @@ class ParticipantViewModel extends ChangeNotifier {
     }
   }
 
-  void deleteParticipant(int index) {
-    _participantService.removeParticipant(index);
+  Future<List<Participant>> getParticipants() async {
+    debugPrint("Fetching participants");
+    final participants = await ParticipantService.getParticipants();
+    debugPrint("Number of participants: ${participants.length}");
+    return participants;
+  }
+
+  Future<void> deleteParticipant(int index) async {
+    await ParticipantService.removeParticipant(index);
     notifyListeners();
   }
 
-  void deleteAll() {
-    _participantService.removeAllParticipants();
+  Future<void> deleteAll() async {
+    await ParticipantService.removeAllParticipants();
     notifyListeners();
   }
 

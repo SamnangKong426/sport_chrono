@@ -2,17 +2,20 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/models/race_model.dart';
+import 'package:sport_chrono/services/participant_service.dart';
 
 class RaceViewModel extends ChangeNotifier {
   // use Race model to hold sport type + participants
   Race _currentRace = Race(sportType: 'Swimming', participants: []);
 
   // backing store for all participants (unfiltered)
-  final List<Participant> _allParticipants = [];
+  List<Participant> _allParticipants = [];
 
   // expose getters that read from the Race model
   List<Participant> get participants => _currentRace.participants;
   String get selectedSport => _currentRace.sportType;
+
+  // Service
 
   // global race timer
   Timer? _timer;
@@ -23,14 +26,8 @@ class RaceViewModel extends ChangeNotifier {
     _loadParticipants();
   }
 
-  void _loadParticipants() {
-    // TODO: replace with real data source
-    _allParticipants.addAll([
-      Participant(bib: '1', name: 'Alice', timer: Duration.zero, status: false),
-      Participant(bib: '2', name: 'Bob', timer: Duration.zero, status: true),
-      Participant(bib: '3', name: 'Carl', timer: Duration.zero, status: false),
-      Participant(bib: '4', name: 'Diana', timer: Duration.zero, status: true),
-    ]);
+  void _loadParticipants() async {
+    _allParticipants = await ParticipantService.getParticipants();
     // initialize Race with loaded participants
     _currentRace = Race(
       sportType: _currentRace.sportType,
@@ -80,7 +77,9 @@ class RaceViewModel extends ChangeNotifier {
     final filtered =
         query.isEmpty
             ? List<Participant>.from(_allParticipants)
-            : _allParticipants.where((p) => p.bib.contains(query)).toList();
+            : _allParticipants
+                .where((p) => p.bib.toString().contains(query))
+                .toList();
 
     _currentRace = Race(
       sportType: _currentRace.sportType,
