@@ -5,118 +5,263 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Timer App',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primarySwatch: Colors.blue,
+        fontFamily: 'Roboto',
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const TimerScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class TimerScreen extends StatelessWidget {
+  const TimerScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    // Colors used in the design
+    const Color darkBlue = Color(0xFF1A2C70);
+    const Color mediumBlue = Color(0xFF3D5AA8);
+    const Color lightBlue = Color(0xFFABB9E8);
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'Timer',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Column(
+        children: [
+          // Main timer display
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 25),
+            decoration: BoxDecoration(
+              color: darkBlue,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              '00:00:00',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 42,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          
+          // Activity selection buttons
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildActivityButton('Swimming', Icons.pool, darkBlue),
+                _buildActivityButton('Cycling', Icons.directions_bike, mediumBlue, isSelected: false),
+                _buildActivityButton('Running', Icons.directions_run, lightBlue, isSelected: false),
+              ],
+            ),
+          ),
+          
+          // Range selector
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: lightBlue,
+                      borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
+                    ),
+                    child: const Icon(Icons.chevron_left, color: Colors.white),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    color: mediumBlue,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      '01 - 28',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    color: lightBlue,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      '29 - 56',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    color: lightBlue,
+                    alignment: Alignment.center,
+                    child: const Text(
+                      '57 - 84',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: lightBlue,
+                      borderRadius: BorderRadius.horizontal(right: Radius.circular(8)),
+                    ),
+                    child: const Icon(Icons.chevron_right, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Grid of interval tiles
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1.5,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                itemCount: 28,
+                itemBuilder: (context, index) {
+                  final itemNumber = index + 1;
+                  // Define which items should be dark blue (selected)
+                  final isDarkBlue = [3, 7, 8, 14, 16, 18, 20, 22, 24, 26, 28].contains(itemNumber);
+                  
+                  return _buildIntervalTile(
+                    number: itemNumber,
+                    time: itemNumber < 3 || (itemNumber > 3 && itemNumber < 7) || itemNumber > 8
+                        ? '00:3${itemNumber < 10 ? index+2 : index}:${itemNumber < 5 ? '2' : itemNumber < 10 ? '5' : '1'}${itemNumber % 3}'
+                        : null,
+                    isSelected: isDarkBlue,
+                    bgColor: isDarkBlue ? darkBlue : lightBlue,
+                  );
+                },
+              ),
+            ),
+          ),
+          
+          // Bottom navigation
+          Container(
+            height: 60,
+            color: darkBlue,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildNavItem('Home', Icons.home),
+                _buildNavItem('Race', Icons.flag),
+                _buildNavItem('Timer', Icons.timer, isSelected: true),
+                _buildNavItem('Result', Icons.assignment),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildActivityButton(String label, IconData icon, Color color, {bool isSelected = true}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(color: color),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildIntervalTile({
+    required int number, 
+    String? time, 
+    required bool isSelected, 
+    required Color bgColor
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            number < 10 ? '0$number' : '$number',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+          if (time != null)
+            Text(
+              time,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildNavItem(String label, IconData icon, {bool isSelected = false}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: Colors.white,
+          size: isSelected ? 28 : 24,
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: isSelected ? 12 : 10,
+          ),
+        ),
+      ],
     );
   }
 }
