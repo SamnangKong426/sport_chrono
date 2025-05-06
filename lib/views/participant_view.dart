@@ -34,36 +34,32 @@ class _ParticipantViewtate extends State<ParticipantView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Triathlon',
-                style: TextStyle(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Participants',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontSize: 24),
               ),
-              const Text(
+              const SizedBox(height: 4),
+              Text(
                 'add participants to start the race',
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Poppins',
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
               ),
               const SizedBox(height: 16),
               _buildParticipantInputRow(),
               const SizedBox(height: 16),
               _buildParticipantListHeader(),
+              const SizedBox(height: 16),
               Expanded(child: _buildParticipantList()),
               const SizedBox(height: 16),
               _buildNextButton(),
@@ -72,7 +68,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
           ),
         ),
       ),
-      // bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -83,21 +78,8 @@ class _ParticipantViewtate extends State<ParticipantView> {
           flex: 1,
           child: TextField(
             controller: _viewModel.bibController,
-            style: const TextStyle(
-              fontSize: 18,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.bold,
-            ),
-            decoration: const InputDecoration(
-              hintText: 'BIB #',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 12,
-              ),
-            ),
+            style: Theme.of(context).textTheme.bodyLarge,
+            decoration: const InputDecoration(hintText: 'BIB #'),
             keyboardType: TextInputType.number,
           ),
         ),
@@ -106,39 +88,24 @@ class _ParticipantViewtate extends State<ParticipantView> {
           flex: 2,
           child: TextField(
             controller: _viewModel.nameController,
-            style: const TextStyle(
-              fontSize: 18,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.bold,
-            ),
-            decoration: const InputDecoration(
-              hintText: 'Participant Name',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 12,
-              ),
-            ),
+            style: Theme.of(context).textTheme.bodyLarge,
+            decoration: const InputDecoration(hintText: 'Participant Name'),
           ),
         ),
         const SizedBox(width: 8),
-        InkWell(
-          onTap: () {
-            setState(() {
-              _viewModel.addParticipant();
-            });
+        FloatingActionButton(
+          mini: true,
+          onPressed: () async {
+            final added = await _viewModel.addParticipant();
+            if (!added) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('BIB already exists')),
+              );
+            } else {
+              setState(() { /* rebuild list */ });
+            }
           },
-          child: FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                _viewModel.addParticipant();
-              });
-            },
-            mini: true,
-            child: const Icon(Icons.add),
-          ),
+          child: const Icon(Icons.add),
         ),
       ],
     );
@@ -172,19 +139,20 @@ class _ParticipantViewtate extends State<ParticipantView> {
         ),
         TextButton(
           onPressed: () async {
-            await _viewModel.deleteAll(); // wait until the DB is cleared
-            setState(() {}); // then rebuild & refire the FutureBuilder
+            await _viewModel.deleteAll();
+            setState(() {});
           },
           style: TextButton.styleFrom(
-            backgroundColor: Colors.red,
-            side: const BorderSide(color: Color(0xFFD0312D), width: 1),
+            backgroundColor: Theme.of(context).colorScheme.error,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-          child: const Text(
+          child: Text(
             'Delete All',
-            style: TextStyle(color: Colors.white),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: Colors.white),
           ),
         ),
       ],
@@ -226,11 +194,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: _viewModel.navigateToNextScreen,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF283593),
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -240,18 +203,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Result'),
-      ],
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white70,
-      backgroundColor: const Color(0xFF283593),
     );
   }
 }

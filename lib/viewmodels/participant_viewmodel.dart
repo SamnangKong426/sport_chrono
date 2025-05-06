@@ -6,19 +6,27 @@ class ParticipantViewModel extends ChangeNotifier {
   final TextEditingController bibController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  void addParticipant() {
+  /// Attempts to add a participant. Returns true if added, false if bib exists or invalid.
+  Future<bool> addParticipant() async {
     if (bibController.text.isNotEmpty && nameController.text.isNotEmpty) {
-      ParticipantService.addParticipant(
-        Participant(
-          bib: int.parse(bibController.text),
-          name: nameController.text,
-          status: false,
-        ),
+      final bib = int.tryParse(bibController.text);
+      if (bib == null) return false;
+      
+      // check existing
+      final existing = await ParticipantService.getParticipants();
+      if (existing.any((p) => p.bib == bib)) {
+        return false;
+      }
+      // add new
+      await ParticipantService.addParticipant(
+        Participant(bib: bib, name: nameController.text, status: true),
       );
       bibController.clear();
       nameController.clear();
       notifyListeners();
+      return true;
     }
+    return false;
   }
 
   Future<List<Participant>> getParticipants() async {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Colors
-  static const Color primaryColor  = Color(0xFF7B8DCF);
+  static const Color primaryColor = Color(0xFF7B8DCF);
   static const Color selectedColor = Color(0xFF243882);
 
   // Themedata
@@ -15,16 +15,8 @@ class AppTheme {
     scaffoldBackgroundColor: Colors.white,
 
     textTheme: const TextTheme(
-      headlineMedium: TextStyle(    // used for your timer
-        fontSize: 48, 
-        fontWeight: FontWeight.bold, 
-        color: Colors.white,
-      ),
-      titleLarge: TextStyle(        // used for your “Race” title
-        fontSize: 24, 
-        fontWeight: FontWeight.bold, 
-        color: Colors.black,
-      ),
+      headlineMedium: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+      titleLarge: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
       bodyLarge: TextStyle(color: primaryColor, fontSize: 16),
       titleMedium: TextStyle(color: selectedColor, fontSize: 16),
     ),
@@ -32,17 +24,13 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     ),
 
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: selectedColor),

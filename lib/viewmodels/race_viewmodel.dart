@@ -15,8 +15,6 @@ class RaceViewModel extends ChangeNotifier {
   List<Participant> get participants => _currentRace.participants;
   String get selectedSport => _currentRace.sportType;
 
-  // Service
-
   // global race timer
   Timer? _timer;
   Duration elapsed = Duration.zero;
@@ -28,6 +26,8 @@ class RaceViewModel extends ChangeNotifier {
 
   Future<void> _loadParticipants() async {
     _allParticipants = await ParticipantService.getParticipants();
+    // sort participants by BIB
+    _allParticipants.sort((a, b) => a.bib.compareTo(b.bib));
     // initialize Race with loaded participants
     _currentRace = Race(
       sportType: _currentRace.sportType,

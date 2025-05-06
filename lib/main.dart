@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sport_chrono/themes/app_theme.dart';
 import 'package:sport_chrono/viewmodels/race_viewmodel.dart';
 import 'package:sport_chrono/viewmodels/participant_viewmodel.dart';
 import 'package:sport_chrono/viewmodels/results_viewmodel.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
         home: const HomePage(),
       ),
     );
@@ -54,13 +56,17 @@ class _HomePageState extends State<HomePage> {
 
   void _onTap(int index) {
     setState(() => _currentIndex = index);
-    // when switching to Results tab (index 3), reload data
-    if (index == 3) {
-      context.read<ResultsViewModel>().refresh();
-    } else if (index == 1) {
-      context.read<RaceViewModel>().refresh();
-    } else if (index == 0) {
-      context.read<ParticipantViewModel>().refresh();
+    // Refresh data for the corresponding tab
+    switch (index) {
+      case 0:
+        context.read<ParticipantViewModel>().refresh();
+        break;
+      case 1:
+        context.read<RaceViewModel>().refresh();
+        break;
+      case 2:
+        context.read<ResultsViewModel>().refresh();
+        break;
     }
   }
 
