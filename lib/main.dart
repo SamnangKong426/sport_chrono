@@ -44,6 +44,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+
   static const _pages = <Widget>[
     ParticipantView(),
     RaceView(),
@@ -53,6 +54,14 @@ class _HomePageState extends State<HomePage> {
 
   void _onTap(int index) {
     setState(() => _currentIndex = index);
+    // when switching to Results tab (index 3), reload data
+    if (index == 3) {
+      context.read<ResultsViewModel>().refresh();
+    } else if (index == 1) {
+      context.read<RaceViewModel>().refresh();
+    } else if (index == 0) {
+      context.read<ParticipantViewModel>().refresh();
+    }
   }
 
   @override

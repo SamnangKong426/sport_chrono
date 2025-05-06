@@ -120,7 +120,13 @@ class RaceView extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            ParticipantTable(participants: participants),
+            const SizedBox(height: 20),
+            Expanded(
+              child:
+                  participants.isEmpty
+                      ? const Center(child: Text('No participants found.'))
+                      : ParticipantTable(participants: participants),
+            ),
           ],
         ),
       ),

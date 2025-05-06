@@ -110,91 +110,96 @@ class _ResultsViewState extends State<ResultsView> {
                 ),
               ),
               Divider(color: Colors.grey[300]),
-              // Results list
-              Expanded(
-                child: ListView.builder(
-                  itemCount: results.length,
-                  itemBuilder: (context, index) {
-                    final result = results[index];
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 8.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey[200]!),
+              // Results list or empty state
+              if (results.isEmpty)
+                const Expanded(
+                  child: Center(child: Text('No participants found.')),
+                )
+              else
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: results.length,
+                    itemBuilder: (context, index) {
+                      final result = results[index];
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 8.0,
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 40,
-                            child: Text(result.bib.toString()),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: Colors.grey[200]!),
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: Text(
-                              result.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 40,
+                              child: Text(result.bib.toString()),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                result.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              result.swimmingTimer != Duration.zero
-                                  ? result.swimmingTimer
-                                      .toString()
-                                      .split('.')
-                                      .first
-                                      .padLeft(8, '0')
-                                  : '00:00:00',
-                              style: const TextStyle(fontSize: 12),
+                            Expanded(
+                              child: Text(
+                                result.swimmingTimer != Duration.zero
+                                    ? result.swimmingTimer
+                                        .toString()
+                                        .split('.')
+                                        .first
+                                        .padLeft(8, '0')
+                                    : '00:00:00',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              result.runningTimer != Duration.zero
-                                  ? result.runningTimer
-                                      .toString()
-                                      .split('.')
-                                      .first
-                                      .padLeft(8, '0')
-                                  : '00:00:00',
-                              style: const TextStyle(fontSize: 12),
+                            Expanded(
+                              child: Text(
+                                result.runningTimer != Duration.zero
+                                    ? result.runningTimer
+                                        .toString()
+                                        .split('.')
+                                        .first
+                                        .padLeft(8, '0')
+                                    : '00:00:00',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              result.cyclingTimer != Duration.zero
-                                  ? result.cyclingTimer
-                                      .toString()
-                                      .split('.')
-                                      .first
-                                      .padLeft(8, '0')
-                                  : '00:00:00',
-                              style: const TextStyle(fontSize: 12),
+                            Expanded(
+                              child: Text(
+                                result.cyclingTimer != Duration.zero
+                                    ? result.cyclingTimer
+                                        .toString()
+                                        .split('.')
+                                        .first
+                                        .padLeft(8, '0')
+                                    : '00:00:00',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              result.totalTimer != Duration.zero
-                                  ? result.totalTimer
-                                      .toString()
-                                      .split('.')
-                                      .first
-                                      .padLeft(8, '0')
-                                  : '00:00:00',
-                              style: const TextStyle(fontSize: 12),
+                            Expanded(
+                              child: Text(
+                                result.totalTimer != Duration.zero
+                                    ? result.totalTimer
+                                        .toString()
+                                        .split('.')
+                                        .first
+                                        .padLeft(8, '0')
+                                    : '00:00:00',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
               const SizedBox(height: 16),
               // Export button
               ElevatedButton.icon(

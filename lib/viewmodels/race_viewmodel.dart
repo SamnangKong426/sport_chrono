@@ -26,7 +26,7 @@ class RaceViewModel extends ChangeNotifier {
     _loadParticipants();
   }
 
-  void _loadParticipants() async {
+  Future<void> _loadParticipants() async {
     _allParticipants = await ParticipantService.getParticipants();
     // initialize Race with loaded participants
     _currentRace = Race(
@@ -87,6 +87,8 @@ class RaceViewModel extends ChangeNotifier {
     );
     notifyListeners();
   }
+
+  Future<void> refresh() => _loadParticipants();
 
   @override
   void dispose() {

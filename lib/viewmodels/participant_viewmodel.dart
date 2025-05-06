@@ -42,6 +42,8 @@ class ParticipantViewModel extends ChangeNotifier {
     // Implementation for navigation to the next screen
   }
 
+  Future<void> refresh() => getParticipants();
+
   @override
   void dispose() {
     bibController.dispose();
