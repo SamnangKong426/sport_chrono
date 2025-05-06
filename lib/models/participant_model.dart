@@ -4,6 +4,7 @@ class Participant {
   Duration swimmingTimer;
   Duration cyclingTimer;
   Duration runningTimer;
+  Duration totalTimer;
   final bool status;
 
   Participant({
@@ -13,6 +14,7 @@ class Participant {
     this.swimmingTimer = Duration.zero,
     this.cyclingTimer = Duration.zero,
     this.runningTimer = Duration.zero,
+    this.totalTimer = Duration.zero,
   });
 
   Map<String, dynamic> toJson() {

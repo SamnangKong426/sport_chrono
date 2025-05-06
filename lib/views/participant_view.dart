@@ -22,7 +22,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
 
   @override
   void dispose() {
-    _viewModel.dispose();
     super.dispose();
   }
 
@@ -73,7 +72,7 @@ class _ParticipantViewtate extends State<ParticipantView> {
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      // bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
