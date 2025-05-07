@@ -30,4 +30,12 @@ class ParticipantService {
       await doc.reference.delete();
     }
   }
+
+  /// Update an existing participant document by bib
+  static Future<void> updateParticipant(Participant p) async {
+    final snapshot = await _participants.where('bib', isEqualTo: p.bib).get();
+    for (var doc in snapshot.docs) {
+      await doc.reference.update(p.toJson());
+    }
+  }
 }

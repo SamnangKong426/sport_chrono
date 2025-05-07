@@ -2,30 +2,51 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import '../models/participant_model.dart';
+import '../services/participant_service.dart';
 
 enum Activity { Swimming, Cycling, Running }
 
 class TimerViewModel extends ChangeNotifier {
-  // Timer state
   Duration elapsed = Duration.zero;
   Timer? _ticker;
   bool get isRunning => _ticker?.isActive ?? false;
 
-  // Activity tabs
   Activity selectedActivity = Activity.Swimming;
 
-  // Paging through participants instead of intervals
   static const int itemsPerPage = 20;
   int pageIndex = 0;
 
-  // Selected/highlighted intervals
   final Set<int> selectedIntervals = {};
 
-  // simple participants list
+  bool isRecordMode = false;
+  final Map<int, Duration> recordedTimes = {};
+
   List<Participant> participants = List.generate(
     41,
     (i) => Participant(bib: i + 1, name: 'Participant ${i + 1}'),
   );
+
+  TimerViewModel() {
+    // fire‐and‐forget load
+    loadParticipants();
+  }
+
+  /// Fetch from Firestore and replace local list
+  Future<void> loadParticipants() async {
+    try {
+      final data = await ParticipantService.getParticipants();
+      debugPrint('🔍 Loaded participants (${data.length}):');
+      for (var p in data) {
+        debugPrint(' • ${p.toString()}');
+      }
+      participants = data;
+      // reset paging
+      pageIndex = 0;
+      notifyListeners();
+    } catch (e, st) {
+      debugPrint('❌ Error loading participants: $e\n$st');
+    }
+  }
 
   /// Flip the `status` of the participant with [bib].
   void toggleParticipantStatus(int bib) {
@@ -112,6 +133,36 @@ class TimerViewModel extends ChangeNotifier {
       selectedIntervals.add(number);
     }
     notifyListeners();
+  }
+
+  void toggleRecordMode() {
+    isRecordMode = !isRecordMode;
+    notifyListeners();
+  }
+
+  Future<void> recordTime(int bib) async {
+    final p = participants.firstWhere((p) => p.bib == bib);
+    switch (selectedActivity) {
+      case Activity.Swimming:
+        p.swimmingTimer = elapsed;
+        break;
+      case Activity.Cycling:
+        p.cyclingTimer = elapsed;
+        break;
+      case Activity.Running:
+        p.runningTimer = elapsed;
+        break;
+    }
+    p.totalTimer = p.swimmingTimer + p.cyclingTimer + p.runningTimer;
+    debugPrint('🕒 Recorded ${selectedActivity.name} for #$bib → ${timerText}');
+    notifyListeners();
+
+    try {
+      await ParticipantService.updateParticipant(p);
+      debugPrint('✅ Synced participant #$bib to Firestore');
+    } catch (e) {
+      debugPrint('❌ Failed to sync #$bib: $e');
+    }
   }
 
   String _twoDigits(int n) => n.toString().padLeft(2, '0');

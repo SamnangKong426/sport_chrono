@@ -29,6 +29,7 @@ class TimerView extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              actions: [], // no more toggle button
             ),
             body: Column(
               children: [
@@ -158,7 +159,7 @@ class TimerView extends StatelessWidget {
                   ),
                 ),
 
-                // Participant toggles
+                // Participant toggles / recorders
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -174,41 +175,70 @@ class TimerView extends StatelessWidget {
                       itemBuilder: (context, idx) {
                         final part = vm.currentParticipants[idx];
                         final isSel = part.status;
+                        // pick the right timer field
+                        final Duration partTime = () {
+                          switch (vm.selectedActivity) {
+                            case Activity.Swimming:
+                              return part.swimmingTimer;
+                            case Activity.Cycling:
+                              return part.cyclingTimer;
+                            case Activity.Running:
+                              return part.runningTimer;
+                          }
+                        }();
+                        final hasTime = partTime > Duration.zero;
                         return GestureDetector(
-                          onTap: () => vm.toggleParticipantStatus(part.bib),
+                          onTap:
+                              vm.isRunning
+                                  ? () => vm.recordTime(part.bib)
+                                  : null, // only record when timer is running
                           child: Container(
                             decoration: BoxDecoration(
                               color: isSel ? mediumBlue : lightBlue,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             alignment: Alignment.center,
-                            child: Text(
-                              part.bib.toString().padLeft(2, '0'),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  part.bib.toString().padLeft(2, '0'),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                if (hasTime) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    // format the right field
+                                    () {
+                                      final d = partTime;
+                                      final h = d.inHours.toString().padLeft(
+                                        2,
+                                        '0',
+                                      );
+                                      final m = (d.inMinutes % 60)
+                                          .toString()
+                                          .padLeft(2, '0');
+                                      final s = (d.inSeconds % 60)
+                                          .toString()
+                                          .padLeft(2, '0');
+                                      return '$h:$m:$s';
+                                    }(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
                         );
                       },
                     ),
-                  ),
-                ),
-
-                // Bottom navigation (unchanged)
-                Container(
-                  height: 60,
-                  color: darkBlue,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildNavItem('Home', Icons.home),
-                      _buildNavItem('Race', Icons.flag),
-                      _buildNavItem('Timer', Icons.timer, isSelected: true),
-                      _buildNavItem('Result', Icons.assignment),
-                    ],
                   ),
                 ),
               ],
