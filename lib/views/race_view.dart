@@ -17,9 +17,9 @@ class RaceView extends StatelessWidget {
     final vm = context.watch<RaceViewModel>();
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
+      body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TimerDisplay(text: formatDuration(vm.elapsed)),
 
@@ -28,14 +28,17 @@ class RaceView extends StatelessWidget {
               onActivitySelected: vm.selectActivity,
             ),
 
-
             // 3) bib filter
-            BIBSearchBar(onChanged: vm.filterByBib),
+            Container(
+              padding: const EdgeInsets.all(8),
+              child: BIBSearchBar(onChanged: vm.filterByBib),
+            ),
 
             const SizedBox(height: 20),
 
             // 4) participants table
-            Expanded(
+            Container(
+              padding: const EdgeInsets.all(8),
               child:
                   vm.participants.isEmpty
                       ? const Center(child: Text('No participants found.'))

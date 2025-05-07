@@ -4,6 +4,7 @@ import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/models/race_model.dart';
 import 'package:sport_chrono/services/participant_service.dart';
 import 'package:sport_chrono/viewmodels/timer_viewmodel.dart';
+import '../services/timer_service.dart';
 
 class RaceViewModel extends ChangeNotifier {
   Race _currentRace = Race(sportType: 'Swimming', participants: []);
@@ -11,25 +12,27 @@ class RaceViewModel extends ChangeNotifier {
   List<Participant> _allParticipants = [];
 
   Activity _selectedActivity = Activity.Swimming;
-  Duration elapsed = Duration.zero;
-  bool isRunning = false;
 
   Activity get selectedActivity => _selectedActivity;
 
   List<Participant> get participants => _currentRace.participants;
   String get selectedSport => _currentRace.sportType;
 
-  Timer? _timer;
-
   RaceViewModel() {
+    TimerService.instance.addListener(notifyListeners);
     _loadParticipants();
   }
 
+  Duration get elapsed => TimerService.instance.elapsed;
+  bool get isRunning => TimerService.instance.running;
+
+  void startTimer() => TimerService.instance.start();
+  void stopTimer() => TimerService.instance.pause();
+  void resetTimer() => TimerService.instance.reset();
+
   Future<void> _loadParticipants() async {
     _allParticipants = await ParticipantService.getParticipants();
-    // sort participants by BIB
     _allParticipants.sort((a, b) => a.bib.compareTo(b.bib));
-    // initialize Race with loaded participants
     _currentRace = Race(
       sportType: _currentRace.sportType,
       participants: List.from(_allParticipants),
@@ -37,7 +40,6 @@ class RaceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // change sport on the Race model
   void selectSport(String sport) {
     _currentRace = Race(
       sportType: sport,
@@ -48,36 +50,46 @@ class RaceViewModel extends ChangeNotifier {
 
   void selectActivity(Activity activity) {
     _selectedActivity = activity;
-    notifyListeners();
-  }
 
-  void toggleTimer() => isRunning ? stopTimer() : startTimer();
+    // 1) only keep participants who actually have a non-zero time for this activity
+    final filtered =
+        _allParticipants.where((p) {
+          switch (activity) {
+            case Activity.Swimming:
+              return p.swimmingTimer > Duration.zero;
+            case Activity.Cycling:
+              return p.cyclingTimer > Duration.zero;
+            case Activity.Running:
+              return p.runningTimer > Duration.zero;
+          }
+        }).toList();
 
-  void startTimer() {
-    if (isRunning) return;
-    isRunning = true;
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      elapsed += const Duration(seconds: 1);
-      notifyListeners();
+    // 2) sort by that same activity’s time
+    filtered.sort((a, b) {
+      Duration aTime, bTime;
+      switch (activity) {
+        case Activity.Swimming:
+          aTime = a.swimmingTimer;
+          bTime = b.swimmingTimer;
+          break;
+        case Activity.Cycling:
+          aTime = a.cyclingTimer;
+          bTime = b.cyclingTimer;
+          break;
+        case Activity.Running:
+          aTime = a.runningTimer;
+          bTime = b.runningTimer;
+          break;
+      }
+      return aTime.compareTo(bTime);
     });
+
+    // 3) replace your Race model so the view rebuilds
+    _currentRace = Race(sportType: activity.name, participants: filtered);
+
     notifyListeners();
   }
 
-  void stopTimer() {
-    if (!isRunning) return;
-    _timer?.cancel();
-    isRunning = false;
-    notifyListeners();
-  }
-
-  void resetTimer() {
-    _timer?.cancel();
-    elapsed = Duration.zero;
-    isRunning = false;
-    notifyListeners();
-  }
-
-  // filter participants by BIB (partial match) via new Race instance
   void filterByBib(String query) {
     final filtered =
         query.isEmpty
@@ -97,7 +109,7 @@ class RaceViewModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    TimerService.instance.removeListener(notifyListeners);
     super.dispose();
   }
 }

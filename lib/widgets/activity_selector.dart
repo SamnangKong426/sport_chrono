@@ -12,7 +12,7 @@ class ActivitySelector extends StatelessWidget {
     Key? key,
     required this.selectedActivity,
     required this.onActivitySelected,
-    this.padding = const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    this.padding = const EdgeInsets.all(8),
     this.margin    = EdgeInsets.zero,
   }) : super(key: key);
 

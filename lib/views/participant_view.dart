@@ -34,26 +34,16 @@ class _ParticipantViewtate extends State<ParticipantView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Triathlon',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Text(
+                  'TRIATHLON',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1A2C70),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Participants',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontSize: 24),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'add participants to start the race',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
               ),
               const SizedBox(height: 16),
               _buildParticipantInputRow(),
@@ -61,8 +51,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
               _buildParticipantListHeader(),
               const SizedBox(height: 16),
               Expanded(child: _buildParticipantList()),
-              const SizedBox(height: 16),
-              _buildNextButton(),
               const SizedBox(height: 16),
             ],
           ),
@@ -186,23 +174,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
           );
         }
       },
-    );
-  }
-
-  Widget _buildNextButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _viewModel.navigateToNextScreen,
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.play_arrow, color: Colors.white),
-            SizedBox(width: 8),
-            Text('Next', style: TextStyle(color: Colors.white, fontSize: 16)),
-          ],
-        ),
-      ),
     );
   }
 }

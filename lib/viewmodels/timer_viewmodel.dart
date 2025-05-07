@@ -3,13 +3,12 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import '../models/participant_model.dart';
 import '../services/participant_service.dart';
+import '../services/timer_service.dart';
 
 enum Activity { Swimming, Cycling, Running }
 
 class TimerViewModel extends ChangeNotifier {
-  Duration elapsed = Duration.zero;
-  Timer? _ticker;
-  bool get isRunning => _ticker?.isActive ?? false;
+  bool get isRunning => TimerService.instance.running;
 
   Activity selectedActivity = Activity.Swimming;
 
@@ -27,7 +26,7 @@ class TimerViewModel extends ChangeNotifier {
   );
 
   TimerViewModel() {
-    // fire‐and‐forget load
+    TimerService.instance.addListener(notifyListeners);
     loadParticipants();
   }
 
@@ -40,6 +39,10 @@ class TimerViewModel extends ChangeNotifier {
         debugPrint(' • ${p.toString()}');
       }
       participants = data;
+
+      // ←— sort by bib ascending
+      participants.sort((a, b) => a.bib.compareTo(b.bib));
+
       // reset paging
       pageIndex = 0;
       notifyListeners();
@@ -57,10 +60,11 @@ class TimerViewModel extends ChangeNotifier {
   }
 
   // Computed getters
-  String get timerText =>
-      '${_twoDigits(elapsed.inHours)}:'
-      '${_twoDigits(elapsed.inMinutes % 60)}:'
-      '${_twoDigits(elapsed.inSeconds % 60)}';
+  String get timerText {
+    final e = TimerService.instance.elapsed;
+    String two(int n) => n.toString().padLeft(2, '0');
+    return '${two(e.inHours)}:${two(e.inMinutes % 60)}:${two(e.inSeconds % 60)}';
+  }
 
   /// Labels like “01 - 04”, “05 - 08”, … based on participants count
   List<String> get pageLabels {
@@ -81,24 +85,9 @@ class TimerViewModel extends ChangeNotifier {
   }
 
   // Actions
-  void start() {
-    if (isRunning) return;
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
-      elapsed += const Duration(seconds: 1);
-      notifyListeners();
-    });
-  }
-
-  void pause() {
-    _ticker?.cancel();
-    notifyListeners();
-  }
-
-  void reset() {
-    _ticker?.cancel();
-    elapsed = Duration.zero;
-    notifyListeners();
-  }
+  void start() => TimerService.instance.start();
+  void pause() => TimerService.instance.pause();
+  void reset() => TimerService.instance.reset();
 
   void selectActivity(Activity a) {
     selectedActivity = a;
@@ -142,19 +131,30 @@ class TimerViewModel extends ChangeNotifier {
 
   Future<void> recordTime(int bib) async {
     final p = participants.firstWhere((p) => p.bib == bib);
+
+    // grab the runtime value from the singleton
+    final current = TimerService.instance.elapsed;
+
     switch (selectedActivity) {
       case Activity.Swimming:
-        p.swimmingTimer = elapsed;
+        p.swimmingTimer = current;
         break;
       case Activity.Cycling:
-        p.cyclingTimer = elapsed;
+        p.cyclingTimer = current;
         break;
       case Activity.Running:
-        p.runningTimer = elapsed;
+        p.runningTimer = current;
         break;
     }
     p.totalTimer = p.swimmingTimer + p.cyclingTimer + p.runningTimer;
-    debugPrint('🕒 Recorded ${selectedActivity.name} for #$bib → ${timerText}');
+
+    debugPrint(
+      '🕒 Recorded ${selectedActivity.name} for #$bib → '
+      '${_twoDigits(current.inHours)}:'
+      '${_twoDigits(current.inMinutes % 60)}:'
+      '${_twoDigits(current.inSeconds % 60)}',
+    );
+
     notifyListeners();
 
     try {
@@ -166,4 +166,11 @@ class TimerViewModel extends ChangeNotifier {
   }
 
   String _twoDigits(int n) => n.toString().padLeft(2, '0');
+
+  @override
+  void dispose() {
+    // unregister before the VM dies
+    TimerService.instance.removeListener(notifyListeners);
+    super.dispose();
+  }
 }

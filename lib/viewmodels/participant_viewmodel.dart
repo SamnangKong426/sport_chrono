@@ -6,7 +6,6 @@ class ParticipantViewModel extends ChangeNotifier {
   final TextEditingController bibController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
 
-  /// Attempts to add a participant. Returns true if added, false if bib exists or invalid.
   Future<bool> addParticipant() async {
     if (bibController.text.isNotEmpty && nameController.text.isNotEmpty) {
       final bib = int.tryParse(bibController.text);
@@ -44,10 +43,6 @@ class ParticipantViewModel extends ChangeNotifier {
   Future<void> deleteAll() async {
     await ParticipantService.removeAllParticipants();
     notifyListeners();
-  }
-
-  void navigateToNextScreen() {
-    // Implementation for navigation to the next screen
   }
 
   Future<void> refresh() => getParticipants();

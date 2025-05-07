@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_chrono/viewmodels/results_viewmodel.dart';
+import 'package:sport_chrono/widgets/bib_search_bar.dart';
 
 class ResultsView extends StatefulWidget {
   const ResultsView({Key? key}) : super(key: key);
@@ -12,199 +13,118 @@ class ResultsView extends StatefulWidget {
 class _ResultsViewState extends State<ResultsView> {
   final TextEditingController _searchController = TextEditingController();
 
+  String formatDuration(Duration d) =>
+      d != Duration.zero
+          ? d.toString().split('.').first.padLeft(8, '0')
+          : '00:00:00';
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<ResultsViewModel>();
     final results = vm.results;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              BIBSearchBar(onChanged: vm.search),
               const SizedBox(height: 16),
-              // Title
-              const Text(
-                'Results',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              // Search bar
-              TextField(
-                controller: _searchController,
-                onChanged: vm.search,
-                decoration: InputDecoration(
-                  hintText: 'Search participant by BIB...',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[200],
-                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Table header
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 8.0,
-                ),
-                child: Row(
-                  children: const [
-                    SizedBox(
-                      width: 40,
-                      child: Text(
-                        'BIB',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        'Name',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Swimming',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Running',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Cycling',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Total',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(color: Colors.grey[300]),
-              // Results list or empty state
               if (results.isEmpty)
                 const Expanded(
                   child: Center(child: Text('No participants found.')),
                 )
               else
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: results.length,
-                    itemBuilder: (context, index) {
-                      final result = results[index];
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 8.0,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 800,
+                      ), // Ensure enough width for all columns
+                      child: DataTable(
+                        headingRowColor: MaterialStateProperty.all(
+                          const Color(0xFFEFEFEF),
                         ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(color: Colors.grey[200]!),
+                        columnSpacing: 16,
+                        columns: const [
+                          DataColumn(label: Text('BIB')),
+                          DataColumn(label: Text('Name')),
+                          DataColumn(
+                            label: Text(
+                              'Swimming',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 40,
-                              child: Text(result.bib.toString()),
+                          DataColumn(
+                            label: Text(
+                              'Running',
+                              style: TextStyle(fontSize: 12),
                             ),
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                result.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Cycling',
+                              style: TextStyle(fontSize: 12),
                             ),
-                            Expanded(
-                              child: Text(
-                                result.swimmingTimer != Duration.zero
-                                    ? result.swimmingTimer
-                                        .toString()
-                                        .split('.')
-                                        .first
-                                        .padLeft(8, '0')
-                                    : '00:00:00',
-                                style: const TextStyle(fontSize: 12),
-                              ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Total',
+                              style: TextStyle(fontSize: 12),
                             ),
-                            Expanded(
-                              child: Text(
-                                result.runningTimer != Duration.zero
-                                    ? result.runningTimer
-                                        .toString()
-                                        .split('.')
-                                        .first
-                                        .padLeft(8, '0')
-                                    : '00:00:00',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                result.cyclingTimer != Duration.zero
-                                    ? result.cyclingTimer
-                                        .toString()
-                                        .split('.')
-                                        .first
-                                        .padLeft(8, '0')
-                                    : '00:00:00',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                result.totalTimer != Duration.zero
-                                    ? result.totalTimer
-                                        .toString()
-                                        .split('.')
-                                        .first
-                                        .padLeft(8, '0')
-                                    : '00:00:00',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                          ),
+                        ],
+                        rows:
+                            results.map((result) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(Text(result.bib.toString())),
+                                  DataCell(
+                                    Text(
+                                      result.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      formatDuration(result.swimmingTimer),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      formatDuration(result.runningTimer),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      formatDuration(result.cyclingTimer),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      formatDuration(result.totalTimer),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList(),
+                      ),
+                    ),
                   ),
                 ),
               const SizedBox(height: 16),
-              // Export button
               ElevatedButton.icon(
                 onPressed: () {
-                  // Here you would implement your export functionality
+                  // Export functionality
                 },
                 icon: const Icon(Icons.upload_file),
                 label: const Text('Export'),
