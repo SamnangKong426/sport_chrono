@@ -3,22 +3,23 @@ import 'package:flutter/foundation.dart';
 import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/models/race_model.dart';
 import 'package:sport_chrono/services/participant_service.dart';
+import 'package:sport_chrono/viewmodels/timer_viewmodel.dart';
 
 class RaceViewModel extends ChangeNotifier {
-  // use Race model to hold sport type + participants
   Race _currentRace = Race(sportType: 'Swimming', participants: []);
 
-  // backing store for all participants (unfiltered)
   List<Participant> _allParticipants = [];
 
-  // expose getters that read from the Race model
+  Activity _selectedActivity = Activity.Swimming;
+  Duration elapsed = Duration.zero;
+  bool isRunning = false;
+
+  Activity get selectedActivity => _selectedActivity;
+
   List<Participant> get participants => _currentRace.participants;
   String get selectedSport => _currentRace.sportType;
 
-  // global race timer
   Timer? _timer;
-  Duration elapsed = Duration.zero;
-  bool isRunning = false;
 
   RaceViewModel() {
     _loadParticipants();
@@ -45,7 +46,11 @@ class RaceViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // timer controls
+  void selectActivity(Activity activity) {
+    _selectedActivity = activity;
+    notifyListeners();
+  }
+
   void toggleTimer() => isRunning ? stopTimer() : startTimer();
 
   void startTimer() {
