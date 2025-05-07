@@ -5,12 +5,12 @@ class Participant {
   Duration cyclingTimer;
   Duration runningTimer;
   Duration totalTimer;
-  final bool status;
+  bool status;
 
   Participant({
     required this.bib,
     required this.name,
-    required this.status,
+    this.status = false,
     this.swimmingTimer = Duration.zero,
     this.cyclingTimer = Duration.zero,
     this.runningTimer = Duration.zero,

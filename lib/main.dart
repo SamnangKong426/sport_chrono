@@ -6,7 +6,8 @@ import 'package:sport_chrono/viewmodels/participant_viewmodel.dart';
 import 'package:sport_chrono/viewmodels/results_viewmodel.dart';
 import 'package:sport_chrono/views/participant_view.dart';
 import 'package:sport_chrono/views/race_view.dart';
-// import 'package:sport_chrono/views/timer_view.dart';
+import 'package:sport_chrono/views/timer_view.dart';
+import 'package:sport_chrono/viewmodels/timer_viewmodel.dart';
 import 'package:sport_chrono/views/results_view.dart';
 import 'package:sport_chrono/widgets/bottom_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -50,7 +51,7 @@ class _HomePageState extends State<HomePage> {
   static const _pages = <Widget>[
     ParticipantView(),
     RaceView(),
-    // TimerView(),
+    TimerView(),
     ResultsView(),
   ];
 
@@ -65,6 +66,9 @@ class _HomePageState extends State<HomePage> {
         context.read<RaceViewModel>().refresh();
         break;
       case 2:
+        // context.read<TimerViewModel>().refresh();
+        break;
+      case 3:
         context.read<ResultsViewModel>().refresh();
         break;
     }
