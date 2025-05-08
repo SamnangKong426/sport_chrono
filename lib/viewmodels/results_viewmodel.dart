@@ -17,6 +17,7 @@ class ResultsViewModel extends ChangeNotifier {
 
   Future<void> _loadParticipants() async {
     _allParticipants = await ParticipantService.getParticipants();
+    _allParticipants.sort((a, b) => a.bib.compareTo(b.bib));
     _filtered = List.from(_allParticipants);
     notifyListeners();
   }

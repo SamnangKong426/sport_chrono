@@ -58,8 +58,20 @@ class _HomeScaffoldState extends State<HomeScaffold> {
 
   void _onTap(int idx) {
     setState(() => _currentIndex = idx);
-    if (idx == 3) context.read<ResultsViewModel>().refresh();
-    // no need to refresh TimerViewModel here
+    switch (idx) {
+      case 0:
+      context.read<ParticipantViewModel>().refresh();
+      break;
+      case 1:
+      context.read<RaceViewModel>().refresh();
+      break;
+      case 2:
+      context.read<TimerViewModel>().refresh();
+      break;
+      case 3:
+      context.read<ResultsViewModel>().refresh();
+      break;
+    }
   }
 
   @override

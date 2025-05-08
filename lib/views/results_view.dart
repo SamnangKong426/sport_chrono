@@ -122,26 +122,28 @@ class _ResultsViewState extends State<ResultsView> {
                   ),
                 ),
               const SizedBox(height: 16),
-                ElevatedButton.icon(
+              OutlinedButton.icon(
                 onPressed: () async {
                   final vm = context.read<ResultsViewModel>();
                   try {
-                  await vm.exportResultsToFile();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Export successful!')),
-                  );
+                    await vm.exportResultsToFile();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Export successful!')),
+                    );
                   } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Export failed: $e')),
-                  );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Export failed: $e')),
+                    );
                   }
                 },
-                icon: const Icon(Icons.upload_file),
-                label: const Text('Export'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2A459B),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                icon: const Icon(Icons.upload_file, color: Color(0xFF2A459B)),
+                label: const Text(
+                  'Export',
+                  style: TextStyle(color: Color(0xFF2A459B)),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFF2A459B)),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),

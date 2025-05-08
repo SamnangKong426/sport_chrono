@@ -21,7 +21,6 @@ class RaceViewModel extends ChangeNotifier {
 
   Future<void> _loadParticipants() async {
     _all = await ParticipantService.getParticipants();
-    // sort by bib ascending
     _all.sort((a, b) => a.bib.compareTo(b.bib));
     participants = List.from(_all);
     notifyListeners();
