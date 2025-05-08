@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => TimerViewModel()),
         ChangeNotifierProvider(create: (_) => RaceViewModel()),
         ChangeNotifierProvider(create: (_) => ParticipantViewModel()),
         ChangeNotifierProvider(create: (_) => ResultsViewModel()),
@@ -33,45 +34,32 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
-        home: const HomePage(),
+        home: const HomeScaffold(),
       ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomeScaffold extends StatefulWidget {
+  const HomeScaffold({Key? key}) : super(key: key);
+
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScaffold> createState() => _HomeScaffoldState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScaffoldState extends State<HomeScaffold> {
   int _currentIndex = 0;
-
-  static const _pages = <Widget>[
+  final _pages = const [
     ParticipantView(),
     RaceView(),
     TimerView(),
     ResultsView(),
   ];
 
-  void _onTap(int index) {
-    setState(() => _currentIndex = index);
-    // Refresh data for the corresponding tab
-    switch (index) {
-      case 0:
-        context.read<ParticipantViewModel>().refresh();
-        break;
-      case 1:
-        context.read<RaceViewModel>().refresh();
-        break;
-      case 2:
-        // context.read<TimerViewModel>().refresh();
-        break;
-      case 3:
-        context.read<ResultsViewModel>().refresh();
-        break;
-    }
+  void _onTap(int idx) {
+    setState(() => _currentIndex = idx);
+    if (idx == 3) context.read<ResultsViewModel>().refresh();
+    // no need to refresh TimerViewModel here
   }
 
   @override

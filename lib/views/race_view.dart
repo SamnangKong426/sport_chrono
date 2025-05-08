@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'package:sport_chrono/widgets/timer_display.dart';
 import 'package:sport_chrono/widgets/activity_selector.dart';
 import 'package:sport_chrono/widgets/bib_search_bar.dart';
+import 'package:sport_chrono/widgets/timer_display.dart';
 import 'package:sport_chrono/widgets/participant_table.dart';
-
 import '../viewmodels/race_viewmodel.dart';
 import '../utils/formatters.dart';
 
@@ -23,26 +21,32 @@ class RaceView extends StatelessWidget {
           children: [
             TimerDisplay(text: formatDuration(vm.elapsed)),
 
-            ActivitySelector(
-              selectedActivity: vm.selectedActivity,
-              onActivitySelected: vm.selectActivity,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ActivitySelector(
+                selectedActivity: vm.selectedActivity,
+                onActivitySelected: vm.selectActivity,
+              ),
             ),
 
-            // 3) bib filter
-            Container(
-              padding: const EdgeInsets.all(8),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: BIBSearchBar(onChanged: vm.filterByBib),
             ),
 
             const SizedBox(height: 20),
 
-            // 4) participants table
-            Container(
-              padding: const EdgeInsets.all(8),
-              child:
-                  vm.participants.isEmpty
-                      ? const Center(child: Text('No participants found.'))
-                      : ParticipantTable(participants: vm.participants),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child:
+                    vm.participants.isEmpty
+                        ? const Center(child: Text('No participants found.'))
+                        : ParticipantTable(
+                          participants: vm.participants,
+                          activity: vm.selectedActivity, // ← pass it here
+                        ),
+              ),
             ),
           ],
         ),

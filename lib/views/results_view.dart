@@ -122,9 +122,19 @@ class _ResultsViewState extends State<ResultsView> {
                   ),
                 ),
               const SizedBox(height: 16),
-              ElevatedButton.icon(
-                onPressed: () {
-                  // Export functionality
+                ElevatedButton.icon(
+                onPressed: () async {
+                  final vm = context.read<ResultsViewModel>();
+                  try {
+                  await vm.exportResultsToFile();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Export successful!')),
+                  );
+                  } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Export failed: $e')),
+                  );
+                  }
                 },
                 icon: const Icon(Icons.upload_file),
                 label: const Text('Export'),
