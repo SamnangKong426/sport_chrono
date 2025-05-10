@@ -20,29 +20,31 @@ class RaceView extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TimerDisplay(text: formatDuration(raceViewModel.elapsed)),
+        child: Padding(
+          padding: AppSpacing.screenPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //* Timer Display
+              TimerDisplay(text: formatDuration(raceViewModel.elapsed)),
 
-            Padding(
-              padding: AppSpacing.horizontalPadding,
-              child: ActivitySelector(
+              AppSpacing.gapH8,
+
+              //* Activity Selector
+              ActivitySelector(
                 selectedActivity: raceViewModel.selectedActivity,
                 onActivitySelected: raceViewModel.selectActivity,
               ),
-            ),
 
-            Padding(
-              padding: AppSpacing.all16,
-              child: BIBSearchBar(onChanged: raceViewModel.filterByBib),
-            ),
+              AppSpacing.gapH8,
 
-            AppSpacing.gapH16,
+              //* Search Bar
+              BIBSearchBar(onChanged: raceViewModel.filterByBib),
+          
+              AppSpacing.gapH16,
 
-            Expanded(
-              child: Padding(
-                padding: AppSpacing.horizontalPadding,
+              //* Participant Display
+              Expanded(
                 child: raceViewModel.participants.isEmpty
                     ? Center(
                         child: Text(
@@ -57,8 +59,8 @@ class RaceView extends StatelessWidget {
                         activity: raceViewModel.selectedActivity,
                       ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

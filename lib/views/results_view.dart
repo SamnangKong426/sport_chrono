@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_chrono/viewmodels/results_viewmodel.dart';
 import 'package:sport_chrono/widgets/bib_search_bar.dart';
+import 'package:sport_chrono/themes/app_spacing.dart';
+import 'package:sport_chrono/themes/app_colors.dart';
 
 class ResultsView extends StatefulWidget {
   const ResultsView({Key? key}) : super(key: key);
@@ -20,113 +22,169 @@ class _ResultsViewState extends State<ResultsView> {
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<ResultsViewModel>();
-    final results = vm.results;
+    final resultsViewModel = context.watch<ResultsViewModel>();
+    final results = resultsViewModel.results;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: AppSpacing.screenPadding,
           child: Column(
             children: [
-              BIBSearchBar(onChanged: vm.search),
-              const SizedBox(height: 16),
+              //* Search Bar
+              BIBSearchBar(onChanged: resultsViewModel.search),
+              AppSpacing.gapH16,
+
+              //* Results Table
               if (results.isEmpty)
-                const Expanded(
-                  child: Center(child: Text('No participants found.')),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'No participants found.',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
                 )
               else
                 Expanded(
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        minWidth: 800,
-                      ), // Ensure enough width for all columns
-                      child: DataTable(
-                        headingRowColor: MaterialStateProperty.all(
-                          const Color(0xFFEFEFEF),
-                        ),
-                        columnSpacing: 16,
-                        columns: const [
-                          DataColumn(label: Text('BIB')),
-                          DataColumn(label: Text('Name')),
-                          DataColumn(
-                            label: Text(
-                              'Swimming',
-                              style: TextStyle(fontSize: 12),
-                            ),
+                      constraints: const BoxConstraints(minWidth: 800),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: DataTable(
+                          headingRowColor: MaterialStateProperty.all(
+                            // AppColors.background,
+                            AppColors.primary,
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Running',
-                              style: TextStyle(fontSize: 12),
-                            ),
+                          dataRowColor: MaterialStateProperty.all(
+                            AppColors.primary.withOpacity(0.1),
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Cycling',
-                              style: TextStyle(fontSize: 12),
+                          columnSpacing: 16,
+                          columns: const [
+                            DataColumn(
+                              label: Text(
+                                'BIB',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                          DataColumn(
-                            label: Text(
-                              'Total',
-                              style: TextStyle(fontSize: 12),
+                            DataColumn(
+                              label: Text(
+                                'Name',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                        rows:
-                            results.map((result) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(Text(result.bib.toString())),
-                                  DataCell(
-                                    Text(
-                                      result.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
+                            DataColumn(
+                              label: Text(
+                                'Swimming',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Running',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Cycling',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Total',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                          rows:
+                              results.map((result) {
+                                return DataRow(
+                                  cells: [
+                                    DataCell(Text(result.bib.toString())),
+                                    DataCell(
+                                      Text(
+                                        result.name,
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.bodyLarge?.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      formatDuration(result.swimmingTimer),
-                                      style: const TextStyle(fontSize: 12),
+                                    DataCell(
+                                      Text(
+                                        formatDuration(result.swimmingTimer),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(fontSize: 12),
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      formatDuration(result.runningTimer),
-                                      style: const TextStyle(fontSize: 12),
+                                    DataCell(
+                                      Text(
+                                        formatDuration(result.runningTimer),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(fontSize: 12),
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      formatDuration(result.cyclingTimer),
-                                      style: const TextStyle(fontSize: 12),
+                                    DataCell(
+                                      Text(
+                                        formatDuration(result.cyclingTimer),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(fontSize: 12),
+                                      ),
                                     ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      formatDuration(result.totalTimer),
-                                      style: const TextStyle(fontSize: 12),
+                                    DataCell(
+                                      Text(
+                                        formatDuration(result.totalTimer),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(fontSize: 12),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
+                                  ],
+                                );
+                              }).toList(),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              const SizedBox(height: 16),
+              AppSpacing.gapH16,
               OutlinedButton.icon(
                 onPressed: () async {
-                  final vm = context.read<ResultsViewModel>();
                   try {
-                    await vm.exportResultsToFile();
+                    await resultsViewModel.exportResultsToFile();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Export successful!')),
                     );
@@ -136,20 +194,26 @@ class _ResultsViewState extends State<ResultsView> {
                     );
                   }
                 },
-                icon: const Icon(Icons.upload_file, color: Color(0xFF2A459B)),
+                icon: const Icon(
+                  Icons.upload_file,
+                  color: AppColors.primaryDark,
+                ),
                 label: const Text(
                   'Export',
-                  style: TextStyle(color: Color(0xFF2A459B)),
+                  style: TextStyle(color: AppColors.primaryDark),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF2A459B)),
-                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                  side: const BorderSide(color: AppColors.primaryDark),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                    horizontal: 32.0,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              AppSpacing.gapH16,
             ],
           ),
         ),

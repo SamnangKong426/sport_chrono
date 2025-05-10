@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_chrono/models/participant_model.dart';
+import 'package:sport_chrono/themes/app_colors.dart';
 import 'package:sport_chrono/viewmodels/participant_viewmodel.dart';
 import 'package:sport_chrono/widgets/participant_list_item_widgets_views.dart';
-// import 'package:sport_chrono/themes/app_colors.dart';
 import 'package:sport_chrono/themes/app_spacing.dart';
-// import 'package:sport_chrono/themes/app_text_styles.dart';
 
 class ParticipantView extends StatefulWidget {
   const ParticipantView({super.key});
@@ -35,7 +34,7 @@ class _ParticipantViewtate extends State<ParticipantView> {
               Center(
                 child: Text(
                   'TRIATHLON',
-                  style: Theme.of(context).textTheme.titleLarge,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.primaryDark),
                 ),
               ),
               AppSpacing.gapH16,
