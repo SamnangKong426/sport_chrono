@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_spacing.dart';
 
 class BIBSearchBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
@@ -25,19 +27,21 @@ class _BIBSearchBarState extends State<BIBSearchBar> {
       child: SearchBar(
         onChanged: _onQueryChanged,
         onSubmitted: _onQueryChanged,
-        padding: MaterialStateProperty.all(
-          const EdgeInsets.symmetric(horizontal: 16.0),
-        ),
-        leading: Icon(
+        padding: MaterialStateProperty.all(AppSpacing.horizontalPadding),
+        leading: const Icon(
           Icons.search,
-          color: Theme.of(context).colorScheme.secondary,
+          color: AppColors.primaryDark,
         ),
         hintText: "Search participants by BIB...",
         textStyle: MaterialStateProperty.all(
-          TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-            fontSize: 16,
-          ),
+          Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppColors.primaryDark,
+              ),
+        ),
+        hintStyle: MaterialStateProperty.all(
+          Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppColors.textSecondary,
+              ),
         ),
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),

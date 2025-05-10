@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_spacing.dart';
+import '../themes/app_text_styles.dart';
 
 class SportTypeButton extends StatefulWidget {
   const SportTypeButton({
@@ -21,8 +24,12 @@ class SportTypeButton extends StatefulWidget {
 class _SportTypeButtonState extends State<SportTypeButton> {
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-    final selected = Theme.of(context).colorScheme.secondary;
+    final Color activeColor = AppColors.primaryDark;
+    final Color inactiveColor = AppColors.primary;
+
+    final Color borderColor = widget.isSelected ? activeColor : inactiveColor;
+    final Color textColor = widget.isSelected ? activeColor : inactiveColor;
+
     return ElevatedButton(
       onPressed: widget.onTap,
       style: ElevatedButton.styleFrom(
@@ -30,18 +37,21 @@ class _SportTypeButtonState extends State<SportTypeButton> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
           side: BorderSide(
-            color: widget.isSelected ? selected : primary,
+            color: borderColor,
             width: 2,
           ),
         ),
+        padding: AppSpacing.horizontalPadding,
+        elevation: 0,
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(widget.iconData, color: widget.isSelected ? selected : primary),
-          const SizedBox(width: 8.0),
+          Icon(widget.iconData, color: textColor),
+          AppSpacing.gapW8,
           Text(
             widget.sportType,
-            style: TextStyle(color: widget.isSelected ? selected : primary),
+            style: AppTextStyles.textTheme.bodyMedium?.copyWith(color: textColor),
           ),
         ],
       ),

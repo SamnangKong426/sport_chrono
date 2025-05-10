@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/participant_model.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_spacing.dart';
 
 class ParticipantListItem extends StatelessWidget {
   final Participant participant;
@@ -14,9 +16,9 @@ class ParticipantListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: AppSpacing.bottom16,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: AppColors.textSecondary.withOpacity(0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
@@ -24,15 +26,20 @@ class ParticipantListItem extends StatelessWidget {
           width: 30,
           child: Text(
             participant.bib.toString(),
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ),
-        title: Text(participant.name),
+        title: Text(
+          participant.name,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
         trailing: IconButton(
-          icon: const Icon(Icons.delete, color: Colors.red),
+          icon: const Icon(Icons.delete, color: AppColors.error),
           onPressed: onDelete,
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        contentPadding: AppSpacing.horizontalPadding,
       ),
     );
   }

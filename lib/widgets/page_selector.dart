@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_spacing.dart';
+import '../themes/app_text_styles.dart';
 
 typedef PageChanged = void Function(int);
 
@@ -10,8 +13,8 @@ class PageSelector extends StatelessWidget {
   final PageChanged onPageSelected;
 
   /// Colors for inactive/active buttons
-  final Color inactiveColor;
-  final Color activeColor;
+  final Color? inactiveColor;
+  final Color? activeColor;
 
   const PageSelector({
     Key? key,
@@ -20,14 +23,17 @@ class PageSelector extends StatelessWidget {
     required this.onPrevious,
     required this.onNext,
     required this.onPageSelected,
-    this.inactiveColor = const Color(0xFFABB9E8),
-    this.activeColor = const Color(0xFF3D5AA8),
+    this.inactiveColor,
+    this.activeColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Color inactive = inactiveColor ?? AppColors.primary.withOpacity(0.4);
+    final Color active = activeColor ?? AppColors.primaryDark;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: AppSpacing.all16,
       child: Row(
         children: [
           // Prev
@@ -37,7 +43,7 @@ class PageSelector extends StatelessWidget {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: inactiveColor,
+                  color: inactive,
                   borderRadius: const BorderRadius.horizontal(
                     left: Radius.circular(8),
                   ),
@@ -51,17 +57,17 @@ class PageSelector extends StatelessWidget {
           ...labels.asMap().entries.map((e) {
             final idx = e.key;
             final lbl = e.value;
-            final isActive = idx == currentIndex;
+            final bool isActive = idx == currentIndex;
             return Expanded(
               child: GestureDetector(
                 onTap: () => onPageSelected(idx),
                 child: Container(
                   height: 40,
-                  color: isActive ? activeColor : inactiveColor,
+                  color: isActive ? active : inactive,
                   alignment: Alignment.center,
                   child: Text(
                     lbl,
-                    style: const TextStyle(
+                    style: AppTextStyles.textTheme.bodySmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -77,9 +83,9 @@ class PageSelector extends StatelessWidget {
               onTap: onNext,
               child: Container(
                 height: 40,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFABB9E8),
-                  borderRadius: BorderRadius.horizontal(
+                decoration: BoxDecoration(
+                  color: inactive,
+                  borderRadius: const BorderRadius.horizontal(
                     right: Radius.circular(8),
                   ),
                 ),

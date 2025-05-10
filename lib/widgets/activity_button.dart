@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../themes/app_spacing.dart';
 import '../viewmodels/timer_viewmodel.dart';
+import '../themes/app_colors.dart';
 
 class ActivityButton extends StatelessWidget {
   final Activity activity;
@@ -15,18 +17,21 @@ class ActivityButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // map each activity to its accent color
-    const _colors = {
-      Activity.Swimming: Color(0xFF1A2C70),
-      Activity.Cycling: Color(0xFF3D5AA8),
-      Activity.Running: Color(0xFFABB9E8),
+    // Define activity-specific colors
+    const Map<Activity, Color> activityColors = {
+      Activity.Swimming: AppColors.primaryDark,
+      Activity.Cycling: AppColors.primaryDark,
+      Activity.Running: AppColors.primaryDark,
     };
-    const _icons = {
+
+    const Map<Activity, IconData> activityIcons = {
       Activity.Swimming: Icons.pool,
       Activity.Cycling: Icons.directions_bike,
       Activity.Running: Icons.directions_run,
     };
-    final color = _colors[activity]!;
+
+    final Color color = activityColors[activity]!;
+    final IconData icon = activityIcons[activity]!;
 
     return ElevatedButton(
       onPressed: onTap,
@@ -37,7 +42,6 @@ class ActivityButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
           side: BorderSide(
-            // use accent color only when selected; else grey
             color: isSelected ? color : Colors.grey,
             width: 2,
           ),
@@ -47,17 +51,17 @@ class ActivityButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            _icons[activity],
+            icon,
             color: isSelected ? color : Colors.grey,
             size: 18,
           ),
-          const SizedBox(width: 4),
+          AppSpacing.gapW4,
           Text(
             activity.name,
-            style: TextStyle(
-              color: isSelected ? color : Colors.grey,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: isSelected ? color : Colors.grey,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
           ),
         ],
       ),

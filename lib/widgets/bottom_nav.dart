@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import '../themes/app_colors.dart';
 
 class BottomNav extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
-  const BottomNav({super.key, required this.currentIndex, required this.onTap});
+  const BottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +17,13 @@ class BottomNav extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,
       onTap: onTap,
-      selectedItemColor: const Color(0xFF2A459B),
-      unselectedItemColor: Colors.grey,
+      selectedItemColor: AppColors.primaryDark,
+      unselectedItemColor: AppColors.textSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      selectedLabelStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+      unselectedLabelStyle: Theme.of(context).textTheme.bodySmall,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.flag), label: 'Race'),

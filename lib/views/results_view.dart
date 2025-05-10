@@ -95,7 +95,7 @@ class _ResultsViewState extends State<ResultsView> {
                             ),
                             DataColumn(
                               label: Text(
-                                'Running',
+                                'Cycling',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -104,7 +104,7 @@ class _ResultsViewState extends State<ResultsView> {
                             ),
                             DataColumn(
                               label: Text(
-                                'Cycling',
+                                'Running',
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -125,7 +125,9 @@ class _ResultsViewState extends State<ResultsView> {
                               results.map((result) {
                                 return DataRow(
                                   cells: [
+                                    //* BIB
                                     DataCell(Text(result.bib.toString())),
+                                    //* Name
                                     DataCell(
                                       Text(
                                         result.name,
@@ -136,6 +138,7 @@ class _ResultsViewState extends State<ResultsView> {
                                         ),
                                       ),
                                     ),
+                                    //* Swimming Timer
                                     DataCell(
                                       Text(
                                         formatDuration(result.swimmingTimer),
@@ -145,15 +148,8 @@ class _ResultsViewState extends State<ResultsView> {
                                             ?.copyWith(fontSize: 12),
                                       ),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        formatDuration(result.runningTimer),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(fontSize: 12),
-                                      ),
-                                    ),
+                                    
+                                    //* Cycling Timer
                                     DataCell(
                                       Text(
                                         formatDuration(result.cyclingTimer),
@@ -163,6 +159,17 @@ class _ResultsViewState extends State<ResultsView> {
                                             ?.copyWith(fontSize: 12),
                                       ),
                                     ),
+                                    //* Running Timer
+                                    DataCell(
+                                      Text(
+                                        formatDuration(result.runningTimer),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(fontSize: 12),
+                                      ),
+                                    ),
+                                    //* Total Timer
                                     DataCell(
                                       Text(
                                         formatDuration(result.totalTimer),

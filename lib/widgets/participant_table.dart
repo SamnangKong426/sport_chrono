@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/viewmodels/timer_viewmodel.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_spacing.dart';
+import '../themes/app_text_styles.dart';
 
 class ParticipantTable extends StatelessWidget {
   const ParticipantTable({
@@ -26,19 +29,22 @@ class ParticipantTable extends StatelessWidget {
     }
 
     Widget _cell(String text, {bool highlighted = false}) {
-      final color =
-          highlighted
-              ? Theme.of(context).colorScheme.onPrimary
-              : Theme.of(context).colorScheme.primary;
+      final color = highlighted ? Colors.white : AppColors.primaryDark;
       return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(text, style: TextStyle(color: color, fontSize: 16)),
+        padding: AppSpacing.all8,
+        child: Text(
+          text,
+          style: AppTextStyles.textTheme.bodyMedium?.copyWith(
+            color: color,
+            fontWeight: highlighted ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       );
     }
 
     final header = TableRow(
       decoration: BoxDecoration(
-        color: Colors.black.withAlpha(128),
+        color: AppColors.primaryDark.withOpacity(0.8),
         borderRadius: BorderRadius.circular(8),
       ),
       children: [
@@ -53,28 +59,26 @@ class ParticipantTable extends StatelessWidget {
       children: [SizedBox(height: 8), SizedBox(), SizedBox(), SizedBox()],
     );
 
-    final rows =
-        participants.expand<TableRow>((p) {
-          final t = _timerFor(p).toString().split('.').first;
-          final active = p.status;
-          final bg =
-              p.status ? Theme.of(context).colorScheme.primary : Colors.white;
-          return [
-            TableRow(
-              decoration: BoxDecoration(
-                color: bg,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              children: [
-                _cell(p.bib.toString(), highlighted: p.status),
-                _cell(p.name, highlighted: p.status),
-                _cell(t, highlighted: active),
-                _cell(active ? 'Untrack' : 'Track', highlighted: active),
-              ],
-            ),
-            spacer,
-          ];
-        }).toList();
+    final rows = participants.expand<TableRow>((p) {
+      final t = _timerFor(p).toString().split('.').first;
+      final active = p.status;
+      final bg = active ? AppColors.primary : Colors.white;
+      return [
+        TableRow(
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          children: [
+            _cell(p.bib.toString(), highlighted: active),
+            _cell(p.name, highlighted: active),
+            _cell(t, highlighted: active),
+            _cell(active ? 'Untrack' : 'Track', highlighted: active),
+          ],
+        ),
+        spacer,
+      ];
+    }).toList();
 
     return Flexible(
       child: SingleChildScrollView(

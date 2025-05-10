@@ -5,7 +5,6 @@ import 'package:sport_chrono/widgets/bib_search_bar.dart';
 import 'package:sport_chrono/widgets/timer_display.dart';
 import 'package:sport_chrono/widgets/participant_table.dart';
 import 'package:sport_chrono/themes/app_spacing.dart';
-// import 'package:sport_chrono/themes/app_text_styles.dart';
 import 'package:sport_chrono/themes/app_colors.dart';
 
 import '../viewmodels/race_viewmodel.dart';

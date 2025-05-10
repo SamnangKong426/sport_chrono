@@ -20,10 +20,6 @@ class TimerViewModel extends ChangeNotifier {
   bool isRecordMode = false;
   final Map<int, Duration> recordedTimes = {};
 
-  // List<Participant> participants = List.generate(
-  //   41,
-  //   (i) => Participant(bib: i + 1, name: 'Participant ${i + 1}'),
-  // );
 
   List<Participant> participants = [];
 

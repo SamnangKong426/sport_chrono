@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../viewmodels/timer_viewmodel.dart';
+import '../themes/app_spacing.dart';
 import 'activity_button.dart';
 
 class ActivitySelector extends StatelessWidget {
@@ -12,8 +13,8 @@ class ActivitySelector extends StatelessWidget {
     Key? key,
     required this.selectedActivity,
     required this.onActivitySelected,
-    this.padding = const EdgeInsets.all(8),
-    this.margin    = EdgeInsets.zero,
+    this.padding = AppSpacing.all8,
+    this.margin = EdgeInsets.zero,
   }) : super(key: key);
 
   @override

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import '../viewmodels/timer_viewmodel.dart';
 import '../models/participant_model.dart';
 import '../utils/formatters.dart';
+import '../themes/app_spacing.dart';
+import '../themes/app_colors.dart';
+import '../themes/app_text_styles.dart';
 
-/// A 2-column grid of participants with their bib & elapsed time.
-///
-/// You can drop this anywhere, just pass in your VM’s data & callbacks.
 class ParticipantGrid extends StatelessWidget {
   final List<Participant> participants;
   final Activity selectedActivity;
   final bool isRunning;
   final ValueChanged<int> onRecordTime;
-  final Color activeColor;
-  final Color inactiveColor;
+  final Color? activeColor;
+  final Color? inactiveColor;
   final BorderRadiusGeometry borderRadius;
 
   const ParticipantGrid({
@@ -21,15 +21,18 @@ class ParticipantGrid extends StatelessWidget {
     required this.selectedActivity,
     required this.isRunning,
     required this.onRecordTime,
-    this.activeColor = const Color(0xFF3D5AA8),
-    this.inactiveColor = const Color(0xFFABB9E8),
+    this.activeColor,
+    this.inactiveColor,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Color active = activeColor ?? AppColors.primaryDark;
+    final Color inactive = inactiveColor ?? AppColors.primary.withOpacity(0.5);
+
     return GridView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: AppSpacing.all8,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         childAspectRatio: 3,
@@ -49,11 +52,12 @@ class ParticipantGrid extends StatelessWidget {
               return p.runningTimer;
           }
         }();
+
         return GestureDetector(
           onTap: isRunning ? () => onRecordTime(p.bib) : null,
           child: Container(
             decoration: BoxDecoration(
-              color: p.status ? activeColor : inactiveColor,
+              color: p.status ? active : inactive,
               borderRadius: borderRadius,
             ),
             alignment: Alignment.center,
@@ -62,17 +66,19 @@ class ParticipantGrid extends StatelessWidget {
               children: [
                 Text(
                   p.bib.toString().padLeft(2, '0'),
-                  style: const TextStyle(
+                  style: AppTextStyles.textTheme.bodyLarge?.copyWith(
                     color: Colors.white,
-                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 if (time > Duration.zero) ...[
-                  const SizedBox(height: 4),
+                  AppSpacing.gapH4,
                   Text(
                     formatDuration(time),
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    style: AppTextStyles.textTheme.bodySmall?.copyWith(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ],
