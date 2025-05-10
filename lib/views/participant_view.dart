@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/viewmodels/participant_viewmodel.dart';
 import 'package:sport_chrono/widgets/participant_list_item_widgets_views.dart';
+// import 'package:sport_chrono/themes/app_colors.dart';
+import 'package:sport_chrono/themes/app_spacing.dart';
+// import 'package:sport_chrono/themes/app_text_styles.dart';
 
 class ParticipantView extends StatefulWidget {
-  const ParticipantView({Key? key}) : super(key: key);
+  const ParticipantView({super.key});
 
   @override
   State<ParticipantView> createState() => _ParticipantViewtate();
@@ -21,37 +24,27 @@ class _ParticipantViewtate extends State<ParticipantView> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: AppSpacing.screenPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Text(
                   'TRIATHLON',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A2C70),
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
-              const SizedBox(height: 16),
+              AppSpacing.gapH16,
               _buildParticipantInputRow(),
-              const SizedBox(height: 16),
+              AppSpacing.gapH16,
               _buildParticipantListHeader(),
-              const SizedBox(height: 16),
+              AppSpacing.gapH16,
               Expanded(child: _buildParticipantList()),
-              const SizedBox(height: 16),
+              AppSpacing.gapH16,
             ],
           ),
         ),
@@ -71,7 +64,7 @@ class _ParticipantViewtate extends State<ParticipantView> {
             keyboardType: TextInputType.number,
           ),
         ),
-        const SizedBox(width: 8),
+        AppSpacing.gapW8,
         Expanded(
           flex: 2,
           child: TextField(
@@ -80,7 +73,7 @@ class _ParticipantViewtate extends State<ParticipantView> {
             decoration: const InputDecoration(hintText: 'Participant Name'),
           ),
         ),
-        const SizedBox(width: 8),
+        AppSpacing.gapW8,
         FloatingActionButton(
           mini: true,
           onPressed: () async {
@@ -90,7 +83,7 @@ class _ParticipantViewtate extends State<ParticipantView> {
                 const SnackBar(content: Text('BIB already exists')),
               );
             } else {
-              setState(() { /* rebuild list */ });
+              setState(() {});
             }
           },
           child: const Icon(Icons.add),
@@ -103,26 +96,12 @@ class _ParticipantViewtate extends State<ParticipantView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Row(
+        Row(
           children: [
-            SizedBox(width: 16),
-            Text(
-              'BIB',
-              style: TextStyle(
-                fontSize: 18,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 36),
-            Text(
-              'Name',
-              style: TextStyle(
-                fontSize: 18,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            AppSpacing.gapW16,
+            Text('BIB', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(width: 36),
+            Text('Name', style: Theme.of(context).textTheme.titleMedium),
           ],
         ),
         TextButton(
@@ -167,7 +146,7 @@ class _ParticipantViewtate extends State<ParticipantView> {
                 participant: participant,
                 onDelete: () async {
                   await _viewModel.deleteParticipant(participant.bib);
-                  setState(() {}); // Refresh the list after deletion
+                  setState(() {});
                 },
               );
             },
