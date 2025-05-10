@@ -4,48 +4,58 @@ import 'package:sport_chrono/widgets/activity_selector.dart';
 import 'package:sport_chrono/widgets/bib_search_bar.dart';
 import 'package:sport_chrono/widgets/timer_display.dart';
 import 'package:sport_chrono/widgets/participant_table.dart';
+import 'package:sport_chrono/themes/app_spacing.dart';
+// import 'package:sport_chrono/themes/app_text_styles.dart';
+import 'package:sport_chrono/themes/app_colors.dart';
+
 import '../viewmodels/race_viewmodel.dart';
 import '../utils/formatters.dart';
 
 class RaceView extends StatelessWidget {
-  const RaceView({Key? key}) : super(key: key);
+  const RaceView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<RaceViewModel>();
+    final raceViewModel = context.watch<RaceViewModel>();
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TimerDisplay(text: formatDuration(vm.elapsed)),
+            TimerDisplay(text: formatDuration(raceViewModel.elapsed)),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: AppSpacing.horizontalPadding,
               child: ActivitySelector(
-                selectedActivity: vm.selectedActivity,
-                onActivitySelected: vm.selectActivity,
+                selectedActivity: raceViewModel.selectedActivity,
+                onActivitySelected: raceViewModel.selectActivity,
               ),
             ),
 
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: BIBSearchBar(onChanged: vm.filterByBib),
+              padding: AppSpacing.all16,
+              child: BIBSearchBar(onChanged: raceViewModel.filterByBib),
             ),
 
-            const SizedBox(height: 20),
+            AppSpacing.gapH16,
 
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child:
-                    vm.participants.isEmpty
-                        ? const Center(child: Text('No participants found.'))
-                        : ParticipantTable(
-                          participants: vm.participants,
-                          activity: vm.selectedActivity, // ← pass it here
+                padding: AppSpacing.horizontalPadding,
+                child: raceViewModel.participants.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No participants found.',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
                         ),
+                      )
+                    : ParticipantTable(
+                        participants: raceViewModel.participants,
+                        activity: raceViewModel.selectedActivity,
+                      ),
               ),
             ),
           ],
