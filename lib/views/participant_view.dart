@@ -13,7 +13,33 @@ class ParticipantView extends StatefulWidget {
 
 class _ParticipantViewtate extends State<ParticipantView> {
   late final ParticipantViewModel _viewModel;
+  List<Map<String, dynamic>> notifications = [];
+  int notificationCount = 1; // You can make this dynamic
+    void addFinishNotification(String participantName, String finishTime) {
+    setState(() {
+      notifications.insert(0, {
+        'title': 'Race Finished',
+        'message': '$participantName finished in $finishTime',
+        'time': DateTime.now(),
+        'icon': Icons.flag,
+      });
+      notificationCount = notifications.length;
+    });
+  }
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    final difference = now.difference(time);
 
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inHours < 1) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inDays < 1) {
+      return '${difference.inHours}h ago';
+    } else {
+      return '${difference.inDays}d ago';
+    }
+  }
   @override
   void initState() {
     super.initState();
@@ -35,14 +61,125 @@ class _ParticipantViewtate extends State<ParticipantView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Text(
-                  'TRIATHLON',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A2C70),
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'TRIATHLON',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1A2C70),
+                      ),
+                    ),
+                    const SizedBox(width: 250),
+                    Stack(
+                      children: [
+IconButton(
+                          iconSize: 30,
+                          icon: const Icon(Icons.notifications),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Race Notifications'),
+                                  content: SizedBox(
+                                    width: double.maxFinite,
+                                    child:
+                                        notifications.isEmpty
+                                            ? const Center(
+                                              child: Text(
+                                                'No notifications yet',
+                                              ),
+                                            )
+                                            : ListView.separated(
+                                              shrinkWrap: true,
+                                              itemCount: notifications.length,
+                                              separatorBuilder:
+                                                  (context, index) =>
+                                                      const Divider(),
+                                              itemBuilder: (context, index) {
+                                                final notification =
+                                                    notifications[index];
+                                                return ListTile(
+                                                  leading: Icon(
+                                                    notification['icon']
+                                                        as IconData,
+                                                  ),
+                                                  title: Text(
+                                                    notification['title'],
+                                                  ),
+                                                  subtitle: Text(
+                                                    notification['message'],
+                                                  ),
+                                                  trailing: Text(
+                                                    _formatTime(
+                                                      notification['time']
+                                                          as DateTime,
+                                                    ),
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                    // Handle tap if needed
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          notifications.clear();
+                                          notificationCount = 0;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Clear All'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('Close'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          color: const Color(0xFF1A2C70),
+                        ),
+                        if (notificationCount > 0)
+                          Positioned(
+                            right: 10,
+                            top: 10,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 14,
+                                minHeight: 14,
+                              ),
+                              child: Text(
+                                '$notificationCount',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 16),
@@ -58,7 +195,6 @@ class _ParticipantViewtate extends State<ParticipantView> {
       ),
     );
   }
-
   Widget _buildParticipantInputRow() {
     return Row(
       children: [

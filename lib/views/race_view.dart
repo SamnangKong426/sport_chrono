@@ -7,18 +7,43 @@ import 'package:sport_chrono/widgets/participant_table.dart';
 import '../viewmodels/race_viewmodel.dart';
 import '../utils/formatters.dart';
 
-class RaceView extends StatelessWidget {
+class RaceView extends StatefulWidget {
   const RaceView({Key? key}) : super(key: key);
+
+  @override
+  State<RaceView> createState() => _RaceViewState();
+}
+
+class _RaceViewState extends State<RaceView> {
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
+  void showFinishNotification(String bibNumber) {
+    _scaffoldKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 8),
+            Text('Synced participant #$bibNumber to Firestore'),
+          ],
+        ),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<RaceViewModel>();
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+    return ScaffoldMessenger(
+      key: _scaffoldKey,
+      child: Scaffold(
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
             TimerDisplay(text: formatDuration(vm.elapsed)),
 
             Padding(
@@ -51,6 +76,7 @@ class RaceView extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
