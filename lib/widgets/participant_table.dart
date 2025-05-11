@@ -61,7 +61,7 @@ class ParticipantTable extends StatelessWidget {
 
     final rows = participants.expand<TableRow>((p) {
       final t = _timerFor(p).toString().split('.').first;
-      final active = p.status;
+      final active = _timerFor(p) == Duration.zero;
       final bg = active ? AppColors.primary : Colors.white;
       return [
         TableRow(
