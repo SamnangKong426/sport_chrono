@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sport_chrono/models/participant_model.dart';
 import 'package:sport_chrono/themes/app_colors.dart';
+import 'package:sport_chrono/themes/app_text_styles.dart';
 import 'package:sport_chrono/viewmodels/participant_viewmodel.dart';
 import 'package:sport_chrono/widgets/participant_list_item_widgets_views.dart';
 import 'package:sport_chrono/themes/app_spacing.dart';
@@ -34,7 +35,9 @@ class _ParticipantViewtate extends State<ParticipantView> {
               Center(
                 child: Text(
                   'TRIATHLON',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.primaryDark),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: AppColors.primaryDark,
+                  ),
                 ),
               ),
               AppSpacing.gapH16,
@@ -98,9 +101,19 @@ class _ParticipantViewtate extends State<ParticipantView> {
         Row(
           children: [
             AppSpacing.gapW16,
-            Text('BIB', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'BIB',
+              style: AppTextStyles.textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(width: 36),
-            Text('Name', style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              'Name',
+              style: AppTextStyles.textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
         TextButton(
@@ -109,7 +122,8 @@ class _ParticipantViewtate extends State<ParticipantView> {
             setState(() {});
           },
           style: TextButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.error,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            backgroundColor: AppColors.error,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),

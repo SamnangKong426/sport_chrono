@@ -21,18 +21,35 @@ class AppTheme {
     ),
 
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.primary),
+      ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.primaryDark),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.5)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: AppColors.primaryDark, width: 2),
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.error, width: 1.5),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: Colors.red.shade900, width: 2),
+      ),
+      errorStyle: TextStyle(color: AppColors.error, fontSize: 12.0),
       prefixIconColor: AppColors.primaryDark,
-      hintStyle: const TextStyle(color: AppColors.primaryDark, fontSize: 16),
+      hintStyle: TextStyle(
+        color: AppColors.primaryDark.withOpacity(0.6),
+        fontStyle: FontStyle.italic,
+      ),
+      filled: true,
+      fillColor: Colors.grey.shade50,
     ),
   );
 }

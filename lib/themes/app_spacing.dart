@@ -11,6 +11,8 @@ class AppSpacing {
 
   // Margin
   static const EdgeInsets top8 = EdgeInsets.only(top: 8.0);
+  static const EdgeInsets bottom8 = EdgeInsets.only(bottom: 8.0);
+  static const EdgeInsets top16 = EdgeInsets.only(top: 16.0);
   static const EdgeInsets bottom16 = EdgeInsets.only(bottom: 16.0);
   static const EdgeInsets horizontal24 = EdgeInsets.symmetric(horizontal: 24.0);
 
