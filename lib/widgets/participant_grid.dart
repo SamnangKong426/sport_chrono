@@ -11,6 +11,7 @@ class ParticipantGrid extends StatelessWidget {
   final Activity selectedActivity;
   final bool isRunning;
   final ValueChanged<int> onRecordTime;
+  final ValueChanged<int> onResetTime; // Add this callback
   final Color? activeColor;
   final Color? inactiveColor;
   final BorderRadiusGeometry borderRadius;
@@ -21,6 +22,7 @@ class ParticipantGrid extends StatelessWidget {
     required this.selectedActivity,
     required this.isRunning,
     required this.onRecordTime,
+    required this.onResetTime, // Make it required
     this.activeColor,
     this.inactiveColor,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
@@ -55,6 +57,7 @@ class ParticipantGrid extends StatelessWidget {
 
         return GestureDetector(
           onTap: isRunning ? () => onRecordTime(p.bib) : null,
+          onDoubleTap: () => onResetTime(p.bib),
           child: Container(
             decoration: BoxDecoration(
               color: p.status ? active : inactive,

@@ -20,7 +20,6 @@ class TimerViewModel extends ChangeNotifier {
   bool isRecordMode = false;
   final Map<int, Duration> recordedTimes = {};
 
-
   List<Participant> participants = [];
 
   TimerViewModel() {
@@ -172,5 +171,35 @@ class TimerViewModel extends ChangeNotifier {
     // unregister before the VM dies
     TimerService.instance.removeListener(notifyListeners);
     super.dispose();
+  }
+
+  Future<void> resetParticipantTime(int bib) async {
+    final p = participants.firstWhere((p) => p.bib == bib);
+
+    switch (selectedActivity) {
+      case Activity.Swimming:
+        p.swimmingTimer = Duration.zero;
+        break;
+      case Activity.Cycling:
+        p.cyclingTimer = Duration.zero;
+        break;
+      case Activity.Running:
+        p.runningTimer = Duration.zero;
+        break;
+    }
+
+    // Recalculate total timer after reset
+    p.totalTimer = p.swimmingTimer + p.cyclingTimer + p.runningTimer;
+
+    debugPrint('🔄 Reset ${selectedActivity.name} timer for #$bib');
+
+    notifyListeners();
+
+    try {
+      await ParticipantService.updateParticipant(p);
+      debugPrint('✅ Synced reset timer for #$bib to Firestore');
+    } catch (e) {
+      debugPrint('❌ Failed to sync reset for #$bib: $e');
+    }
   }
 }

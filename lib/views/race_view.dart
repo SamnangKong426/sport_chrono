@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sport_chrono/viewmodels/timer_viewmodel.dart';
 import 'package:sport_chrono/widgets/activity_selector.dart';
 import 'package:sport_chrono/widgets/bib_search_bar.dart';
 import 'package:sport_chrono/widgets/timer_display.dart';
@@ -39,28 +40,53 @@ class RaceView extends StatelessWidget {
 
               //* Search Bar
               BIBSearchBar(onChanged: raceViewModel.filterByBib),
-          
+
               AppSpacing.gapH16,
 
               //* Participant Display
               Expanded(
-                child: raceViewModel.participants.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No participants found.',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: AppColors.textSecondary,
-                              ),
+                child:
+                    raceViewModel.participants.isEmpty
+                        ? Center(
+                          child: Text(
+                            'No participants found.',
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: AppColors.textSecondary),
+                          ),
+                        )
+                        : ParticipantTable(
+                          participants: raceViewModel.participants,
+                          activity: raceViewModel.selectedActivity,
                         ),
-                      )
-                    : ParticipantTable(
-                        participants: raceViewModel.participants,
-                        activity: raceViewModel.selectedActivity,
-                      ),
               ),
             ],
           ),
         ),
+      ),
+
+      floatingActionButton: Consumer<TimerViewModel>(
+        builder:
+            (context, timerVM, _) => Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (!timerVM.isRunning)
+                  FloatingActionButton(
+                    onPressed: timerVM.start,
+                    child: const Icon(Icons.play_arrow),
+                  )
+                else
+                  FloatingActionButton(
+                    onPressed: timerVM.pause,
+                    child: const Icon(Icons.pause),
+                  ),
+                const SizedBox(width: 12),
+                FloatingActionButton(
+                  onPressed: timerVM.reset,
+                  child: const Icon(Icons.replay),
+                ),
+              ],
+            ),
       ),
     );
   }

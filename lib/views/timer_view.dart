@@ -31,7 +31,6 @@ class TimerView extends StatelessWidget {
                   onActivitySelected: vm.selectActivity,
                 ),
 
-
                 //* Participant Page Selector
                 PageSelector(
                   labels: vm.pageLabels,
@@ -48,31 +47,32 @@ class TimerView extends StatelessWidget {
                     selectedActivity: vm.selectedActivity,
                     isRunning: vm.isRunning,
                     onRecordTime: vm.recordTime,
+                    onResetTime: vm.resetParticipantTime,
                   ),
                 ),
               ],
             ),
           ),
-          floatingActionButton: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (!vm.isRunning)
-                FloatingActionButton(
-                  onPressed: vm.start,
-                  child: const Icon(Icons.play_arrow),
-                )
-              else
-                FloatingActionButton(
-                  onPressed: vm.pause,
-                  child: const Icon(Icons.pause),
-                ),
-              const SizedBox(width: 12),
-              FloatingActionButton(
-                onPressed: vm.reset,
-                child: const Icon(Icons.replay),
-              ),
-            ],
-          ),
+          // floatingActionButton: Row(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     if (!vm.isRunning)
+          //       FloatingActionButton(
+          //         onPressed: vm.start,
+          //         child: const Icon(Icons.play_arrow),
+          //       )
+          //     else
+          //       FloatingActionButton(
+          //         onPressed: vm.pause,
+          //         child: const Icon(Icons.pause),
+          //       ),
+          //     const SizedBox(width: 12),
+          //     FloatingActionButton(
+          //       onPressed: vm.reset,
+          //       child: const Icon(Icons.replay),
+          //     ),
+          //   ],
+          // ),
         );
       },
     );
